@@ -46,7 +46,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    navigate("/dashboard"); // Redirect to Dashboard
+    navigate("/dashboard"); 
   };
   return (
     <LoginContainer>

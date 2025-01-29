@@ -1,24 +1,63 @@
 import React, { useState } from "react";
-import { Drawer, List, ListItem, ListItemIcon, ListItemText, IconButton, Box, Typography, AppBar, Toolbar } from "@mui/material";
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  IconButton,
+  Box,
+  Typography,
+  AppBar,
+  Toolbar,
+  Card,
+  Grid,
+  Container
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import PieChartIcon from "@mui/icons-material/PieChart";
-import WorkIcon from "@mui/icons-material/Work";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import HourglassFullIcon from "@mui/icons-material/HourglassFull";
-import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
-
-const data = [
-  { name: "Completed", value: 55, color: "#ff0000" },
-  { name: "Ongoing", value: 25, color: "#ff9900" },
-  { name: "Remaining", value: 20, color: "#4CAF50" },
-];
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
+import { PieChart, Pie, Tooltip, Cell } from "recharts";
 
 const Dashboard = () => {
   const [open, setOpen] = useState(false);
 
+  const cardData = [
+    {
+      title: "All Projects",
+      value: 55,
+      completed: 45,
+      icon: <ShoppingCartIcon fontSize="large" />, 
+      color: "linear-gradient(to right, #4facfe, #00f2fe)",
+    },
+    {
+      title: "Ongoing Projects",
+      value: 25,
+      completed: 20,
+      icon: <RocketLaunchIcon fontSize="large" />, 
+      color: "linear-gradient(to right, #43e97b, #38f9d7)",
+    },
+    {
+      title: "Completed Projects",
+      value: 30,
+      completed: 28,
+      icon: <AutorenewIcon fontSize="large" />, 
+      color: "linear-gradient(to right, #fbc2eb, #a6c1ee)",
+    },
+  ];
+
+  const pieData = [
+    { name: "Completed", value: 30, color: "#4caf50" },
+    { name: "Ongoing", value: 25, color: "#ff9800" },
+    { name: "Pending", value: 15, color: "#f44336" },
+  ];
+
   return (
     <Box display="flex">
-      {/* Sidebar */}
       <Drawer variant="permanent" open={open} sx={{ width: open ? 200 : 60, flexShrink: 0 }}>
         <Box display="flex" justifyContent="center" p={1}>
           <img src='./ccft.png' alt="Company Logo" width={open ? "100" : "50"} />
@@ -40,7 +79,6 @@ const Dashboard = () => {
       </Drawer>
 
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        {/* Navbar */}
         <AppBar position="fixed" sx={{ width: `calc(100% - ${open ? 200 : 60}px)` }}>
           <Toolbar>
             <IconButton edge="start" color="inherit" onClick={() => setOpen(!open)}>
@@ -53,36 +91,48 @@ const Dashboard = () => {
           </Toolbar>
         </AppBar>
 
-        {/* Content */}
-        <Box display="flex" justifyContent="space-around" mt={8}>
-          {/* Pie Chart */}
-          <Box>
-            <Typography variant="h6" align="center">Project Status</Typography>
-            <PieChart width={200} height={200}>
-              <Pie data={data} cx={100} cy={100} innerRadius={50} outerRadius={80} fill="#8884d8" dataKey="value">
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip />
-              <Legend />
-            </PieChart>
-          </Box>
-          
-          {/* Data Boxes */}
-          <Box>
-            <Typography variant="body1" align="center">All Projects</Typography>
-            <Box bgcolor="#66BB6A" color="white" p={2} borderRadius={2} textAlign="center">55</Box>
-          </Box>
-          <Box>
-            <Typography variant="body1" align="center">Ongoing Projects</Typography>
-            <Box bgcolor="#FFA726" color="white" p={2} borderRadius={2} textAlign="center">25</Box>
-          </Box>
-          <Box>
-            <Typography variant="body1" align="center">Completed Projects</Typography>
-            <Box bgcolor="#AB47BC" color="white" p={2} borderRadius={2} textAlign="center">30</Box>
-          </Box>
-        </Box>
+        <Container maxWidth="lg" sx={{ mt: 10 }}>
+          <Grid container justifyContent="center" spacing={2}>
+            <Grid item xs={12} md={6}>
+              <Box display="flex" justifyContent="center">
+                <PieChart width={300} height={300}>
+                  <Pie data={pieData} cx="50%" cy="50%" outerRadius={100} fill="#8884d8" dataKey="value">
+                    {pieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </Box>
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={2} mt={4}>
+            {cardData.map((card, index) => (
+              <Grid item xs={12} sm={6} md={4} key={index}>
+                <Card
+                  sx={{
+                    background: card.color,
+                    borderRadius: 3,
+                    p: 2,
+                    color: "white",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    boxShadow: 3,
+                  }}
+                >
+                  <Typography variant="h6">{card.title}</Typography>
+                  <Box display="flex" alignItems="center" justifyContent="space-between">
+                    {card.icon}
+                    <Typography variant="h4">{card.value}</Typography>
+                  </Box>
+                  <Typography variant="body2">Completed Projects {card.completed}</Typography>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
       </Box>
     </Box>
   );
