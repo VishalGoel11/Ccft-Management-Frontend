@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Drawer,
   List,
@@ -25,6 +26,7 @@ import { PieChart, Pie, Tooltip, Cell } from "recharts";
 
 const Dashboard = () => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const cardData = [
     {
@@ -33,6 +35,7 @@ const Dashboard = () => {
       completed: 45,
       icon: <ShoppingCartIcon fontSize="large" />, 
       color: "linear-gradient(to right, #4facfe, #00f2fe)",
+      path: "/all-projects"
     },
     {
       title: "Ongoing Projects",
@@ -40,6 +43,7 @@ const Dashboard = () => {
       completed: 20,
       icon: <RocketLaunchIcon fontSize="large" />, 
       color: "linear-gradient(to right, #43e97b, #38f9d7)",
+      path: "/ongoing-projects"
     },
     {
       title: "Completed Projects",
@@ -47,6 +51,7 @@ const Dashboard = () => {
       completed: 28,
       icon: <AutorenewIcon fontSize="large" />, 
       color: "linear-gradient(to right, #fbc2eb, #a6c1ee)",
+      path: "/completed-projects"
     },
   ];
 
@@ -63,15 +68,15 @@ const Dashboard = () => {
           <img src='./ccft.png' alt="Company Logo" width={open ? "100" : "50"} />
         </Box>
         <List>
-          <ListItem button>
+          <ListItem button onClick={() => navigate("/all-projects")}> 
             <ListItemIcon><PieChartIcon /></ListItemIcon>
             {open && <ListItemText primary="All Projects" />}
           </ListItem>
-          <ListItem button>
+          <ListItem button onClick={() => navigate("/ongoing-projects")}>
             <ListItemIcon><HourglassFullIcon /></ListItemIcon>
             {open && <ListItemText primary="Ongoing" />}
           </ListItem>
-          <ListItem button>
+          <ListItem button onClick={() => navigate("/completed-projects")}>
             <ListItemIcon><CheckCircleIcon /></ListItemIcon>
             {open && <ListItemText primary="Completed" />}
           </ListItem>
@@ -120,7 +125,9 @@ const Dashboard = () => {
                     flexDirection: "column",
                     justifyContent: "space-between",
                     boxShadow: 3,
+                    cursor: "pointer"
                   }}
+                  onClick={() => navigate(card.path)}
                 >
                   <Typography variant="h6">{card.title}</Typography>
                   <Box display="flex" alignItems="center" justifyContent="space-between">

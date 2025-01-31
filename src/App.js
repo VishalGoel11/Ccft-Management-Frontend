@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { AppBar, Toolbar, Typography, Box } from "@mui/material";
+import { AppBar, Toolbar, Typography, Box, CssBaseline } from "@mui/material";
 import LoginPage from "./container/Login";
 import Dashboard from "./container/dashboard";
+import AllProjectsPage from "./container/AllProjects";
 
 const Navbar = () => {
   const [dateTime, setDateTime] = useState("");
@@ -19,7 +20,7 @@ const Navbar = () => {
     <AppBar position="fixed" color="primary">
       <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
         <Box display="flex" alignItems="center">
-          <img src='./ccft.png' alt="Company Logo" style={{ height: "50px", marginRight: "10px" }} />
+          <img src="./ccft.png" alt="Company Logo" style={{ height: "50px", marginRight: "10px" }} />
         </Box>
         <Typography variant="subtitle2">{dateTime}</Typography>
       </Toolbar>
@@ -27,13 +28,39 @@ const Navbar = () => {
   );
 };
 
+const Layout = ({ children }) => {
+  return (
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
+      <Navbar />
+      <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 8 }}>
+        {children}
+      </Box>
+    </Box>
+  );
+};
+
 const App = () => {
   return (
     <Router>
-      <Navbar />
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route
+          path="/dashboard"
+          element={
+            <Layout>
+              <Dashboard />
+            </Layout>
+          }
+        />
+        <Route
+          path="/all-projects"
+          element={
+            <Layout>
+              <AllProjectsPage />
+            </Layout>
+          }
+        />
       </Routes>
     </Router>
   );
