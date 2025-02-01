@@ -75,7 +75,7 @@ const AllProjectsPage = () => {
         </Button>
       </Box>
 
-      {/* Table */}
+
       <TableContainer component={Paper} sx={{ mt: 3 }}>
         <Table>
           <TableHead sx={{ backgroundColor: "#eeeeee" }}>
@@ -111,7 +111,6 @@ const AllProjectsPage = () => {
         </Table>
       </TableContainer>
 
-      {/* Modal */}
       <Modal open={open} onClose={handleClose}>
         <Box
           sx={{

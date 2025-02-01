@@ -20,7 +20,6 @@ import PieChartIcon from "@mui/icons-material/PieChart";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import HourglassFullIcon from "@mui/icons-material/HourglassFull";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import AutorenewIcon from "@mui/icons-material/Autorenew";
 import { PieChart, Pie, Tooltip, Cell } from "recharts";
 
@@ -33,32 +32,33 @@ const Dashboard = () => {
       title: "All Projects",
       value: 55,
       completed: 45,
-      icon: <ShoppingCartIcon fontSize="large" />, 
+      icon: <ShoppingCartIcon fontSize="large" />,
       color: "linear-gradient(to right, #4facfe, #00f2fe)",
       path: "/all-projects"
     },
-    {
-      title: "Ongoing Projects",
-      value: 25,
-      completed: 20,
-      icon: <RocketLaunchIcon fontSize="large" />, 
-      color: "linear-gradient(to right, #43e97b, #38f9d7)",
-      path: "/ongoing-projects"
-    },
+  
     {
       title: "Completed Projects",
       value: 30,
       completed: 28,
-      icon: <AutorenewIcon fontSize="large" />, 
+      icon: <AutorenewIcon fontSize="large" />,
       color: "linear-gradient(to right, #fbc2eb, #a6c1ee)",
       path: "/completed-projects"
     },
+    {
+      title: "Pending Projects", 
+      value: 15,
+      completed: 0,
+      icon: <HourglassFullIcon fontSize="large" />,
+      color: "linear-gradient(to right, #ff9800, #ffcc80)",
+      path: "/pending-projects"
+    }
   ];
 
   const pieData = [
     { name: "Completed", value: 30, color: "#4caf50" },
     { name: "Ongoing", value: 25, color: "#ff9800" },
-    { name: "Pending", value: 15, color: "#f44336" },
+    { name: "Pending", value: 15, color: "#f44336" }
   ];
 
   return (
@@ -68,17 +68,18 @@ const Dashboard = () => {
           <img src='./ccft.png' alt="Company Logo" width={open ? "100" : "50"} />
         </Box>
         <List>
-          <ListItem button onClick={() => navigate("/all-projects")}> 
+          <ListItem button onClick={() => navigate("/all-projects")}>
             <ListItemIcon><PieChartIcon /></ListItemIcon>
             {open && <ListItemText primary="All Projects" />}
           </ListItem>
-          <ListItem button onClick={() => navigate("/ongoing-projects")}>
-            <ListItemIcon><HourglassFullIcon /></ListItemIcon>
-            {open && <ListItemText primary="Ongoing" />}
-          </ListItem>
+         
           <ListItem button onClick={() => navigate("/completed-projects")}>
             <ListItemIcon><CheckCircleIcon /></ListItemIcon>
             {open && <ListItemText primary="Completed" />}
+          </ListItem>
+          <ListItem button onClick={() => navigate("/pending-projects")}> 
+            <ListItemIcon><HourglassFullIcon /></ListItemIcon>
+            {open && <ListItemText primary="Pending" />}
           </ListItem>
         </List>
       </Drawer>
@@ -89,7 +90,11 @@ const Dashboard = () => {
             <IconButton edge="start" color="inherit" onClick={() => setOpen(!open)}>
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" sx={{ flexGrow: 1, textAlign: "center" }}>
+            <Typography 
+              variant="h6" 
+              sx={{ flexGrow: 1, textAlign: "center", cursor: "pointer" }}
+              onClick={() => navigate("/")}
+            >
               DASHBOARD
             </Typography>
             <Typography>{new Date().toLocaleString()}</Typography>
