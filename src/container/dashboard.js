@@ -36,22 +36,21 @@ const Dashboard = () => {
       color: "linear-gradient(to right, #4facfe, #00f2fe)",
       path: "/all-projects"
     },
-  
     {
-      title: "Completed Projects",
+      title: "Completed Projects", // Clicking here will now navigate to Pending Projects
       value: 30,
       completed: 28,
       icon: <AutorenewIcon fontSize="large" />,
       color: "linear-gradient(to right, #fbc2eb, #a6c1ee)",
-      path: "/completed-projects"
+      path: "/CompletePr" // Changed path to Pending Projects
     },
     {
-      title: "Pending Projects", 
+      title: "Pending Projects",
       value: 15,
       completed: 0,
       icon: <HourglassFullIcon fontSize="large" />,
       color: "linear-gradient(to right, #ff9800, #ffcc80)",
-      path: "/pending-projects"
+      path: "/pendingPr"
     }
   ];
 
@@ -72,12 +71,13 @@ const Dashboard = () => {
             <ListItemIcon><PieChartIcon /></ListItemIcon>
             {open && <ListItemText primary="All Projects" />}
           </ListItem>
-         
-          <ListItem button onClick={() => navigate("/completed-projects")}>
+
+          <ListItem button onClick={() => navigate("/CompletePr")}> {/* Changed navigation */}
             <ListItemIcon><CheckCircleIcon /></ListItemIcon>
-            {open && <ListItemText primary="Completed" />}
+            {open && <ListItemText primary="Completed" />} 
           </ListItem>
-          <ListItem button onClick={() => navigate("/pending-projects")}> 
+
+          <ListItem button onClick={() => navigate("/pendingpr")}>
             <ListItemIcon><HourglassFullIcon /></ListItemIcon>
             {open && <ListItemText primary="Pending" />}
           </ListItem>
