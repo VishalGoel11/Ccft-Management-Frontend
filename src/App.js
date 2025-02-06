@@ -4,6 +4,8 @@ import { AppBar, Toolbar, Typography, Box, CssBaseline } from "@mui/material";
 import LoginPage from "./container/Login";
 import Dashboard from "./container/dashboard";
 import AllProjectsPage from "./container/AllProjects";
+import Pendingpr from "./container/pendingPr";
+import CompletePr from "./container/completePr";
 
 const Navbar = () => {
   const [dateTime, setDateTime] = useState("");
@@ -82,6 +84,22 @@ const App = () => {
           element={
             <Layout>
               <AllProjectsPage />
+            </Layout>
+          }
+        />
+         <Route
+          path="/pendingPr"
+          element={
+            <Layout>
+              <Pendingpr />
+            </Layout>
+          }
+        />
+         <Route
+          path="/CompletePr"
+          element={
+            <Layout>
+              <CompletePr />
             </Layout>
           }
         />
