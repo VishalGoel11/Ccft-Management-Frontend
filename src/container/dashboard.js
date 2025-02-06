@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Drawer,
@@ -22,11 +22,21 @@ import HourglassFullIcon from "@mui/icons-material/HourglassFull";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AutorenewIcon from "@mui/icons-material/Autorenew";
 import { PieChart, Pie, Tooltip, Cell } from "recharts";
+import { getLocalStorage, handleHttpRequest } from "../api/utility/Utility";
+import { Tooltip as MaterialUITooltip } from '@mui/material';
+import { getAllSample } from "../api/const/api-url";
 
 const Dashboard = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-
+  useEffect(()=>{
+    const tokenValue = getLocalStorage();
+    if(tokenValue === null || tokenValue === ""){
+      navigate("/");
+    }else{
+      handleHttpRequest("GET",getAllSample,"",true,tokenValue).then(resp => console.log(resp.data));
+    }
+  },[])
   const cardData = [
     {
       title: "All Projects",
@@ -62,26 +72,68 @@ const Dashboard = () => {
   ];
 
   return (
-    <Box display="flex">
+    <>
+    
+      (<Box display="flex">
       <Drawer variant="permanent" open={open} sx={{ width: open ? 200 : 60, flexShrink: 0 }}>
         <Box display="flex" justifyContent="center" p={1}>
           <img src='./ccft.png' alt="Company Logo" width={open ? "100" : "50"} />
         </Box>
         <List>
-          <ListItem button onClick={() => navigate("/all-projects")}>
-            <ListItemIcon><PieChartIcon /></ListItemIcon>
-            {open && <ListItemText primary="All Projects" />}
-          </ListItem>
-         
-          <ListItem button onClick={() => navigate("/completed-projects")}>
-            <ListItemIcon><CheckCircleIcon /></ListItemIcon>
-            {open && <ListItemText primary="Completed" />}
-          </ListItem>
-          <ListItem button onClick={() => navigate("/pending-projects")}> 
+          <MaterialUITooltip title="Projcts">
+            <ListItem button 
+            onClick={() => navigate("/projects")}
+            sx={{
+              "&:hover": {
+                backgroundColor: "#f0f0f0", // Light gray background on hover
+                cursor: "pointer",
+              },
+            }}>
+              <ListItemIcon ><PieChartIcon /></ListItemIcon>
+              {open && <ListItemText primary="Projects" />}
+            </ListItem>
+          </MaterialUITooltip>
+          <MaterialUITooltip title="Clients">
+            <ListItem 
+            button onClick={() => navigate("/clients")}
+            sx={{
+              "&:hover": {
+                backgroundColor: "#f0f0f0", // Light gray background on hover
+                cursor: "pointer",
+              },
+            }}>
+              <ListItemIcon><CheckCircleIcon /></ListItemIcon>
+              {open && <ListItemText primary="Clients" />}
+            </ListItem>
+          </MaterialUITooltip>
+          <MaterialUITooltip title="Vendors">
+          <ListItem 
+          button onClick={() => navigate("/vendors")}
+          sx={{
+            "&:hover": {
+              backgroundColor: "#f0f0f0", // Light gray background on hover
+              cursor: "pointer",
+            },
+          }}> 
             <ListItemIcon><HourglassFullIcon /></ListItemIcon>
-            {open && <ListItemText primary="Pending" />}
+            {open && <ListItemText primary="Vendor" />}
           </ListItem>
+          </MaterialUITooltip>
+          <MaterialUITooltip title= "Tests">
+          <ListItem 
+          button onClick={() => navigate("/tests")}
+          sx={{
+            "&:hover": {
+              backgroundColor: "#f0f0f0", // Light gray background on hover
+              cursor: "pointer",
+            },
+          }}> 
+            <ListItemIcon><HourglassFullIcon /></ListItemIcon>
+            {open && <ListItemText primary="Test" />}
+          </ListItem>
+          </MaterialUITooltip>
         </List>
+        
       </Drawer>
 
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
@@ -146,7 +198,8 @@ const Dashboard = () => {
           </Grid>
         </Container>
       </Box>
-    </Box>
+    </Box>)
+    </>
   );
 };
 
