@@ -54,7 +54,7 @@ const LoginPage = () => {
   let [toastBar,setToastBar] = useState({"val":0,"status":false});
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  }; 
   const delay = (ms) => new Promise((resolve, reject) => {
     return setTimeout(resolve,ms);
   })
