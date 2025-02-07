@@ -24,20 +24,16 @@ import AutorenewIcon from "@mui/icons-material/Autorenew";
 import { PieChart, Pie, Tooltip, Cell } from "recharts";
 import { getLocalStorage, handleHttpRequest } from "../api/utility/Utility";
 import { Tooltip as MaterialUITooltip } from '@mui/material';
-import { getAllSample } from "../api/const/api-url";
+import { getAllSample as Sample } from "../api/const/api-url";
 
 const Dashboard = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  useEffect(()=>{
-    const tokenValue = getLocalStorage();
-    if(tokenValue === null || tokenValue === ""){
-      navigate("/");
-    }else{
-      handleHttpRequest("GET",getAllSample,"",true,tokenValue).then(resp => console.log(resp.data));
-    }
-  },[])
-  const cardData = [
+  // const [sampleCount, setSampleCount] = useState({
+  //   "completed" : 0,
+  //   "pending" : 0
+  // })
+  const [cardData,setCardData] =  useState([
     {
       title: "All Projects",
       value: 55,
@@ -63,13 +59,67 @@ const Dashboard = () => {
       color: "linear-gradient(to right, #ff9800, #ffcc80)",
       path: "/pending-projects"
     }
-  ];
+  ]);
 
-  const pieData = [
+  const [pieData,setPieData] = useState([
     { name: "Completed", value: 30, color: "#4caf50" },
     { name: "Ongoing", value: 25, color: "#ff9800" },
     { name: "Pending", value: 15, color: "#f44336" }
-  ];
+  ]);
+
+
+  useEffect(()=>{
+    const tokenValue = getLocalStorage();
+   let getAllSample = async ()=>{
+      if(tokenValue === null || tokenValue === ""){
+        navigate("/");
+      }else{
+        const response = await handleHttpRequest("GET",Sample,"",true,tokenValue);
+
+        const pending = response.data.reduce((count, sample) => {
+          const pendingTests = sample.test.filter(t => t.t_status === "Pending").length;
+          return count + pendingTests;
+        }, 0);
+        
+        const completed = response.data.reduce((count, sample) => {
+          const pendingTests = sample.test.filter(t => t.t_status === "Completed").length;
+          return count + pendingTests;
+        }, 0);
+
+        setPieData((prevpiedata)=>[
+          {
+            ...prevpiedata[0],
+            value : completed
+          },
+          {
+            ...prevpiedata[1],
+            value : pending
+          },
+          {
+            ...prevpiedata[2],
+            value : completed + pending
+          }
+        ])
+        setCardData((prevcarddata)=>[
+          {
+            ...prevcarddata[0],
+            value : completed
+          },
+          {
+            ...prevcarddata[1],
+            value : pending
+          },
+          {
+            ...prevcarddata[2],
+            value : completed + pending
+          }
+        ])
+      }
+    
+    }
+  getAllSample()
+  },[])
+
 
   return (
     <>
