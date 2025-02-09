@@ -13,6 +13,7 @@ import {
   Modal,
   TextField,
 } from "@mui/material";
+import Sidebar from "./sidebar";
 
 const CompletePr = () => {
   const [projects, setProjects] = useState([]);
@@ -25,10 +26,10 @@ const CompletePr = () => {
     s_raw_data: "",
     t_status: "completed"
   });
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      // Sample data - replace with actual API call
       const response = [
         {
           s_id: "1",
@@ -49,7 +50,6 @@ const CompletePr = () => {
           t_status: "pending"
         }
       ];
-      // Filter to show only completed projects
       const completedProjects = response.filter(project => project.t_status === "completed");
       setProjects(completedProjects);
     };
@@ -82,17 +82,29 @@ const CompletePr = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          backgroundColor: "#3f51b5",
-          color: "white",
-          p: 2,
-          borderRadius: 1,
-        }}
-      >
+       <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
+   <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            transition: 'margin 0.3s',
+            marginLeft: sidebarOpen ? '200px' : '60px', 
+            padding: '10px',
+            width: `calc(100% - ${sidebarOpen ? '200px' : '60px'})`, 
+            overflowX: 'auto',
+          }}
+        >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            backgroundColor: "#3f51b5",
+            color: "white",
+            p: 4,
+            borderRadius: 1,
+          }}
+        >
         <Typography variant="h6">Completed Projects</Typography>
         <Button variant="contained" color="secondary" onClick={handleOpen}>
           ADD NEW
@@ -129,6 +141,7 @@ const CompletePr = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      </Box>
 
       <Modal open={open} onClose={handleClose}>
         <Box

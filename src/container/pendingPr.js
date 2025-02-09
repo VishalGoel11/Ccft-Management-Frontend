@@ -30,6 +30,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ProjectForm from './Form';
+import Sidebar from "./sidebar";
 
 // Styled components from your form
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -74,6 +75,7 @@ const Pendingpr = () => {
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -157,6 +159,19 @@ const Pendingpr = () => {
 
   return (
     <Box sx={{ p: 3 }}>
+     <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
+     
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          transition: 'margin 0.3s',
+          marginLeft: sidebarOpen ? '200px' : '60px', 
+          padding: '20px',
+          width: `calc(100% - ${sidebarOpen ? '200px' : '60px'})`, 
+          overflowX: 'auto',
+        }}
+      >
       <Box
         sx={{
           display: "flex",
@@ -164,7 +179,7 @@ const Pendingpr = () => {
           alignItems: "center",
           backgroundColor: "#3f51b5",
           color: "white",
-          p: 2,
+          p: 4,
           borderRadius: 1,
         }}
       >
@@ -183,8 +198,7 @@ const Pendingpr = () => {
           ADD NEW
         </Button>
       </Box>
-
-      <TableContainer component={Paper} sx={{ mt: 3 }}>
+      <TableContainer component={Paper} sx={{ mt: 3 ,pl:3}}>
         <Table>
           <TableHead sx={{ backgroundColor: "#eeeeee" }}>
             <TableRow>
@@ -233,8 +247,8 @@ const Pendingpr = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      </Box>
 
-      {/* Modal with ProjectForm */}
       <Modal 
         open={open} 
         onClose={handleClose}
@@ -255,7 +269,6 @@ const Pendingpr = () => {
         </Box>
       </Modal>
 
-      {/* Confirmation Dialog for Delete */}
       <Dialog
         open={confirmDeleteOpen}
         onClose={handleConfirmDeleteClose}
@@ -278,7 +291,6 @@ const Pendingpr = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Snackbar for Success Message */}
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         open={snackbarOpen}

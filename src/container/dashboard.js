@@ -25,6 +25,8 @@ import { PieChart, Pie, Tooltip, Cell } from "recharts";
 import { getLocalStorage, handleHttpRequest } from "../api/utility/Utility";
 import { Tooltip as MaterialUITooltip } from '@mui/material';
 import { getAllSample as Sample } from "../api/const/api-url";
+import Sidebar from "./sidebar";
+
 
 const Dashboard = () => {
   const [open, setOpen] = useState(false);
@@ -68,142 +70,71 @@ const Dashboard = () => {
   ]);
 
 
-  useEffect(()=>{
-    const tokenValue = getLocalStorage();
-   let getAllSample = async ()=>{
-      if(tokenValue === null || tokenValue === ""){
-        navigate("/");
-      }else{
-        const response = await handleHttpRequest("GET",Sample,"",true,tokenValue);
+  // useEffect(()=>{
+  //   const tokenValue = getLocalStorage();
+  //  let getAllSample = async ()=>{
+  //     if(tokenValue === null || tokenValue === ""){
+  //       navigate("/");
+  //     }else{
+  //       const response = await handleHttpRequest("GET",Sample,"",true,tokenValue);
 
-        const pending = response.data.reduce((count, sample) => {
-          const pendingTests = sample.test.filter(t => t.t_status === "Pending").length;
-          return count + pendingTests;
-        }, 0);
+  //       const pending = response.data.reduce((count, sample) => {
+  //         const pendingTests = sample.test.filter(t => t.t_status === "Pending").length;
+  //         return count + pendingTests;
+  //       }, 0);
         
-        const completed = response.data.reduce((count, sample) => {
-          const pendingTests = sample.test.filter(t => t.t_status === "Completed").length;
-          return count + pendingTests;
-        }, 0);
+  //       const completed = response.data.reduce((count, sample) => {
+  //         const pendingTests = sample.test.filter(t => t.t_status === "Completed").length;
+  //         return count + pendingTests;
+  //       }, 0);
 
-        setPieData((prevpiedata)=>[
-          {
-            ...prevpiedata[0],
-            value : completed
-          },
-          {
-            ...prevpiedata[1],
-            value : pending
-          },
-          {
-            ...prevpiedata[2],
-            value : completed + pending
-          }
-        ])
-        setCardData((prevcarddata)=>[
-          {
-            ...prevcarddata[0],
-            value : completed
-          },
-          {
-            ...prevcarddata[1],
-            value : pending
-          },
-          {
-            ...prevcarddata[2],
-            value : completed + pending
-          }
-        ])
-      }
+  //       setPieData((prevpiedata)=>[
+  //         {
+  //           ...prevpiedata[0],
+  //           value : completed
+  //         },
+  //         {
+  //           ...prevpiedata[1],
+  //           value : pending
+  //         },
+  //         {
+  //           ...prevpiedata[2],
+  //           value : completed + pending
+  //         }
+  //       ])
+  //       setCardData((prevcarddata)=>[
+  //         {
+  //           ...prevcarddata[0],
+  //           value : completed
+  //         },
+  //         {
+  //           ...prevcarddata[1],
+  //           value : pending
+  //         },
+  //         {
+  //           ...prevcarddata[2],
+  //           value : completed + pending
+  //         }
+  //       ])
+  //     }
     
-    }
-  getAllSample()
-  },[])
+  //   }
+  // getAllSample()
+  // },[])
 
 
   return (
     <>
     
       (<Box display="flex">
-      <Drawer variant="permanent" open={open} sx={{ width: open ? 200 : 60, flexShrink: 0 }}>
-        <Box display="flex" justifyContent="center" p={1}>
-          <img src='./ccft.png' alt="Company Logo" width={open ? "100" : "50"} />
-        </Box>
-        <List>
-          <MaterialUITooltip title="Projcts">
-            <ListItem button 
-            onClick={() => navigate("/projects")}
-            sx={{
-              "&:hover": {
-                backgroundColor: "#f0f0f0", // Light gray background on hover
-                cursor: "pointer",
-              },
-            }}>
-              <ListItemIcon ><PieChartIcon /></ListItemIcon>
-              {open && <ListItemText primary="Projects" />}
-            </ListItem>
-          </MaterialUITooltip>
-          <MaterialUITooltip title="Clients">
-            <ListItem 
-            button onClick={() => navigate("/clients")}
-            sx={{
-              "&:hover": {
-                backgroundColor: "#f0f0f0", // Light gray background on hover
-                cursor: "pointer",
-              },
-            }}>
-              <ListItemIcon><CheckCircleIcon /></ListItemIcon>
-              {open && <ListItemText primary="Clients" />}
-            </ListItem>
-          </MaterialUITooltip>
-          <MaterialUITooltip title="Vendors">
-          <ListItem 
-          button onClick={() => navigate("/vendors")}
-          sx={{
-            "&:hover": {
-              backgroundColor: "#f0f0f0", // Light gray background on hover
-              cursor: "pointer",
-            },
-          }}> 
-            <ListItemIcon><HourglassFullIcon /></ListItemIcon>
-            {open && <ListItemText primary="Vendor" />}
-          </ListItem>
-          </MaterialUITooltip>
-          <MaterialUITooltip title= "Tests">
-          <ListItem 
-          button onClick={() => navigate("/tests")}
-          sx={{
-            "&:hover": {
-              backgroundColor: "#f0f0f0", // Light gray background on hover
-              cursor: "pointer",
-            },
-          }}> 
-            <ListItemIcon><HourglassFullIcon /></ListItemIcon>
-            {open && <ListItemText primary="Test" />}
-          </ListItem>
-          </MaterialUITooltip>
-        </List>
-        
-      </Drawer>
+        <Sidebar /> 
+     
 
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <AppBar position="fixed" sx={{ width: `calc(100% - ${open ? 200 : 60}px)` }}>
-          <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={() => setOpen(!open)}>
-              <MenuIcon />
-            </IconButton>
-            <Typography 
-              variant="h6" 
-              sx={{ flexGrow: 1, textAlign: "center", cursor: "pointer" }}
-              onClick={() => navigate("/")}
-            >
-              DASHBOARD
-            </Typography>
-            <Typography>{new Date().toLocaleString()}</Typography>
-          </Toolbar>
-        </AppBar>
+        <AppBar position="fixed" sx={{ width: `calc(100% - ${open ? 200 : 60}px)` }}/>
+         
 
-        <Container maxWidth="lg" sx={{ mt: 10 }}>
+        <Container maxWidth="lg" sx={{ marginTop:-10 }}>
           <Grid container justifyContent="center" spacing={2}>
             <Grid item xs={12} md={6}>
               <Box display="flex" justifyContent="center">

@@ -60,6 +60,7 @@ const LoginPage = () => {
   })
   const handleSubmit = async (e) => {
     e.preventDefault();
+    navigate("/dashboard");
     try{
       const response = await handleHttpRequest("POST",loginUser, formData, false);
       if(response.status === 200){
@@ -114,4 +115,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default LoginPage;

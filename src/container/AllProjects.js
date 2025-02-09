@@ -15,6 +15,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ProjectForm from './Form';
+import Sidebar from "./sidebar";
 
 const AllProjectsPage = () => {
   const [projects, setProjects] = useState([]);
@@ -28,6 +29,7 @@ const AllProjectsPage = () => {
     s_raw_data: "",
     t_status: "new"
   });
+    const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -130,17 +132,29 @@ const AllProjectsPage = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          backgroundColor: "#3f51b5",
-          color: "white",
-          p: 2,
-          borderRadius: 1,
-        }}
-      >
+     <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
+   <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            transition: 'margin 0.3s',
+            marginLeft: sidebarOpen ? '200px' : '60px', 
+            padding: '10px',
+            width: `calc(100% - ${sidebarOpen ? '200px' : '60px'})`, 
+            overflowX: 'auto',
+          }}
+        >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            backgroundColor: "#3f51b5",
+            color: "white",
+            p: 4,
+            borderRadius: 1,
+          }}
+        >
         <Typography variant="h6">All Projects</Typography>
         <Button 
           variant="contained" 
@@ -210,7 +224,7 @@ const AllProjectsPage = () => {
           </TableBody>
         </Table>
       </TableContainer>
-
+</Box>
       <Modal 
         open={open} 
         onClose={handleClose}
