@@ -40,7 +40,7 @@ const Sidebar = () => {
       }}
     >
       <Box display="flex" flexDirection="column" alignItems="center" p={1}>
-        <img src={'./ccft.png'} alt="Logo" style={{ width: open ? 100 : 40, transition: 'width 0.3s', cursor: 'pointer' }} onClick={() => navigate('/login')} />
+        <img src={'./ccft.png'} alt="Logo" style={{ width: open ? 100 : 40, transition: 'width 0.3s', cursor: 'pointer' }} onClick={() => navigate('/dashboard')} />
         <IconButton onClick={toggleSidebar}>
           <MenuIcon />
         </IconButton>
@@ -72,12 +72,12 @@ const Sidebar = () => {
             {open && <ListItemText primary="Clients" />}
           </ListItem>
         </Tooltip>
-        <Tooltip title="Vendors" placement="right" disableHoverListener={open}>
+        {/* <Tooltip title="Vendors" placement="right" disableHoverListener={open}>
           <ListItem button onClick={() => navigate('/vendors')}>
             <ListItemIcon><HourglassFullIcon /></ListItemIcon>
             {open && <ListItemText primary="Vendors" />}
           </ListItem>
-        </Tooltip>
+        </Tooltip> */}
         <Tooltip title="Tests" placement="right" disableHoverListener={open}>
           <ListItem button onClick={() => navigate('/tests')}>
             <ListItemIcon><HourglassFullIcon /></ListItemIcon>

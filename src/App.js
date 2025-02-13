@@ -10,6 +10,8 @@ import { Avatar } from "@mui/material";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import BugReportIcon from "@mui/icons-material/BugReport";
+import Client from "./container/client";
+import Test from "./container/test";
 
 
 const Navbar = () => {
@@ -111,22 +113,22 @@ const App = () => {
             </Layout>
           }
         /> */}
-        {/* <Route
+        <Route
           path="/tests"
           element={
             <Layout>
               <Test />
             </Layout>
           }
-        /> */}
-         {/* <Route
-          path="/pendingPr"
+        />
+         <Route
+          path="/clients"
           element={
             <Layout>
-              <Pendingpr />
+              <Client />
             </Layout>
           }
-        /> */}
+        />
          {/* <Route
           path="/CompletePr"
           element={
