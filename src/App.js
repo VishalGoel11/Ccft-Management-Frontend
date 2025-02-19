@@ -12,12 +12,13 @@ import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import BugReportIcon from "@mui/icons-material/BugReport";
 import Client from "./container/client";
 import Test from "./container/test";
+import User from "./container/User";
 
 
 const Navbar = () => {
   const [dateTime, setDateTime] = useState("");
-  const [accountType, setAccountType] = useState("admin"); // Example roles: "admin", "employee", "tester"
-  const [userName, setUserName] = useState("John Doe"); // Replace with actual user data
+  const [accountType, setAccountType] = useState("admin");
+  const [userName, setUserName] = useState("John Doe"); 
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -27,7 +28,6 @@ const Navbar = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Function to get the corresponding icon based on the role
   const getAccountIcon = () => {
     switch (accountType) {
       case "admin":
@@ -43,8 +43,7 @@ const Navbar = () => {
 
   return (
     <AppBar position="fixed" color="primary">
-      <Toolbar style={{ display: "flex", justifyContent: "flex-end" }}> {/* Aligns content to the right */}
-        {/* Account Section (Top Right Corner) */}
+      <Toolbar style={{ display: "flex", justifyContent: "flex-end" }}>
         <Box display="flex" flexDirection="column" alignItems="center">
           <IconButton>{getAccountIcon()}</IconButton>
           <Typography variant="caption" color="inherit">{userName}</Typography>
@@ -121,6 +120,12 @@ const App = () => {
             </Layout>
           }
         />
+        <Route path='/users'
+        element={
+          <Layout><User/></Layout>
+          
+          }
+          />
          <Route
           path="/clients"
           element={
