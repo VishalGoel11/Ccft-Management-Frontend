@@ -12,32 +12,14 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import UserModal from './userModal';
+import UserModal from "./userModal";
 
 const User = () => {
   const [open, setOpen] = useState(false);
   const [editUser, setEditUser] = useState(null);
   const [users, setUsers] = useState([
-    {
-      id: 1,
-      name: "John Doe",
-      full_address: "123 Main St, NY",
-      gst: "12345ABC",
-      poc: "Manager",
-      phone_number: "123-456-7890",
-      arrival_date: "2024-07-01",
-      departure_date: "2024-07-10",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      full_address: "456 Elm St, CA",
-      gst: "98765XYZ",
-      poc: "Supervisor",
-      phone_number: "987-654-3210",
-      arrival_date: "2024-08-01",
-      departure_date: "2024-08-05",
-    },
+    { id: 1, name: "John Doe", email: "john@example.com", role: "Admin", status: "Active", joined: "2023-05-12" },
+    { id: 2, name: "Jane Smith", email: "jane@example.com", role: "User", status: "Pending", joined: "2023-06-15" },
   ]);
 
   const handleOpen = (user = null) => {
@@ -52,9 +34,11 @@ const User = () => {
 
   const handleUserSubmit = (userData) => {
     if (editUser) {
+      // Update existing user
       setUsers(users.map((u) => (u.id === editUser.id ? { ...u, ...userData } : u)));
     } else {
-      setUsers([...users, { ...userData, id: users.length + 1 }]);
+      // Add new user
+      setUsers([...users, { ...userData, id: users.length + 1, joined: new Date().toISOString().split("T")[0] }]);
     }
     handleClose();
   };
@@ -71,12 +55,10 @@ const User = () => {
             <TableRow>
               <TableCell>S.No</TableCell>
               <TableCell>Name</TableCell>
-              <TableCell>Full Address</TableCell>
-              <TableCell>GST</TableCell>
-              <TableCell>POC</TableCell>
-              <TableCell>Phone Number</TableCell>
-              <TableCell>Arrival Date</TableCell>
-              <TableCell>Departure Date</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Role</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Joined Date</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -85,12 +67,10 @@ const User = () => {
               <TableRow key={user.id}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{user.name}</TableCell>
-                <TableCell>{user.full_address}</TableCell>
-                <TableCell>{user.gst}</TableCell>
-                <TableCell>{user.poc}</TableCell>
-                <TableCell>{user.phone_number}</TableCell>
-                <TableCell>{user.arrival_date}</TableCell>
-                <TableCell>{user.departure_date}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.role}</TableCell>
+                <TableCell>{user.status}</TableCell>
+                <TableCell>{user.joined}</TableCell>
                 <TableCell>
                   <Button size="small" color="primary" onClick={() => handleOpen(user)}>
                     <EditIcon />

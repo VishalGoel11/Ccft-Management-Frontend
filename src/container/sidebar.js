@@ -7,11 +7,14 @@ import HourglassFullIcon from '@mui/icons-material/HourglassFull';
 import MenuIcon from '@mui/icons-material/Menu';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import PersonIcon from '@mui/icons-material/Person'; // New icon for Users
+import PersonIcon from '@mui/icons-material/Person';
+
 
 const Sidebar = () => {
+
   const [open, setOpen] = useState(false);
   const [projectOpen, setProjectOpen] = useState(false);
+
   const navigate = useNavigate();
 
   const toggleSidebar = () => {
@@ -79,7 +82,6 @@ const Sidebar = () => {
             {open && <ListItemText primary="Tests" />}
           </ListItem>
         </Tooltip>
-        {/* New Users menu item */}
         <Tooltip title="Users" placement="right" disableHoverListener={open}>
           <ListItem button onClick={() => navigate('/users')}>
             <ListItemIcon><PersonIcon /></ListItemIcon>

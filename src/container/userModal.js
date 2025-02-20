@@ -5,33 +5,24 @@ import {
   DialogContent,
   TextField,
   Button,
+  MenuItem,
   DialogActions,
 } from "@mui/material";
 
 const UserModal = ({ open, onClose, onSubmit, editUser }) => {
   const [userData, setUserData] = useState({
     name: "",
-    full_address: "",
-    gst: "",
-    poc: "",
-    phone_number: "",
-    arrival_date: "",
-    departure_date: "",
+    email: "",
+    role: "User",
+    status: "Active",
+    password: "",
   });
 
   useEffect(() => {
     if (editUser) {
       setUserData(editUser);
     } else {
-      setUserData({
-        name: "",
-        full_address: "",
-        gst: "",
-        poc: "",
-        phone_number: "",
-        arrival_date: "",
-        departure_date: "",
-      });
+      setUserData({ name: "", email: "", role: "User", status: "Active", password: "" });
     }
   }, [editUser]);
 
@@ -51,12 +42,17 @@ const UserModal = ({ open, onClose, onSubmit, editUser }) => {
       </DialogTitle>
       <DialogContent>
         <TextField label="Full Name *" name="name" fullWidth margin="dense" variant="outlined" value={userData.name} onChange={handleChange} />
-        <TextField label="Full Address *" name="full_address" fullWidth margin="dense" variant="outlined" value={userData.full_address} onChange={handleChange} />
-        <TextField label="GST *" name="gst" fullWidth margin="dense" variant="outlined" value={userData.gst} onChange={handleChange} />
-        <TextField label="POC *" name="poc" fullWidth margin="dense" variant="outlined" value={userData.poc} onChange={handleChange} />
-        <TextField label="Phone Number *" name="phone_number" fullWidth margin="dense" variant="outlined" value={userData.phone_number} onChange={handleChange} />
-        <TextField label="Arrival Date *" name="arrival_date" type="date" fullWidth margin="dense" variant="outlined" value={userData.arrival_date} onChange={handleChange} InputLabelProps={{ shrink: true }} />
-        <TextField label="Departure Date *" name="departure_date" type="date" fullWidth margin="dense" variant="outlined" value={userData.departure_date} onChange={handleChange} InputLabelProps={{ shrink: true }} />
+        <TextField label="Email *" name="email" type="email" fullWidth margin="dense" variant="outlined" value={userData.email} onChange={handleChange} />
+        <TextField select label="Role *" name="role" fullWidth margin="dense" variant="outlined" value={userData.role} onChange={handleChange}>
+          <MenuItem value="Admin">Admin</MenuItem>
+          <MenuItem value="User">User</MenuItem>
+        </TextField>
+        <TextField select label="Status *" name="status" fullWidth margin="dense" variant="outlined" value={userData.status} onChange={handleChange}>
+          <MenuItem value="Active">Active</MenuItem>
+          <MenuItem value="Inactive">Inactive</MenuItem>
+          <MenuItem value="Pending">Pending</MenuItem>
+        </TextField>
+        {!editUser && <TextField label="Password *" name="password" type="password" fullWidth margin="dense" variant="outlined" value={userData.password} onChange={handleChange} />}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} variant="outlined">CANCEL</Button>
