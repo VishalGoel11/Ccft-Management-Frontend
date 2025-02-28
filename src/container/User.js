@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Box,
   Table,
   TableBody,
   TableCell,
@@ -13,13 +14,18 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UserModal from "./userModal";
+import Swal from "sweetalert2";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Sidebar from "./sidebar";
 
 const User = () => {
   const [open, setOpen] = useState(false);
   const [editUser, setEditUser] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [users, setUsers] = useState([
-    { id: 1, name: "John Doe", email: "john@example.com", role: "Admin", status: "Active", joined: "2023-05-12" },
-    { id: 2, name: "Jane Smith", email: "jane@example.com", role: "User", status: "Pending", joined: "2023-06-15" },
+    { id: 101, name: "John Doe", email: "john@example.com", role: "Admin", status: "Active", joined: "2023-05-12" },
+    { id: 102, name: "Jane Smith", email: "jane@example.com", role: "User", status: "Pending", joined: "2023-06-15" },
   ]);
 
   const handleOpen = (user = null) => {
@@ -34,63 +40,87 @@ const User = () => {
 
   const handleUserSubmit = (userData) => {
     if (editUser) {
-      // Update existing user
       setUsers(users.map((u) => (u.id === editUser.id ? { ...u, ...userData } : u)));
     } else {
-      // Add new user
-      setUsers([...users, { ...userData, id: users.length + 1, joined: new Date().toISOString().split("T")[0] }]);
+      const newId = Math.floor(Math.random() * 900) + 100;
+      setUsers([...users, { ...userData, id: newId, joined: new Date().toISOString().split("T")[0] }]);
     }
     handleClose();
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <Typography variant="h6" style={{ background: "#3f51b5", color: "#fff", padding: "10px", borderRadius: "5px" }}>
-        All Users
-      </Typography>
+    <Box sx={{ p: 3 }}>
+      <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          transition: "margin 0.3s",
+          marginLeft: sidebarOpen ? "200px" : "60px",
+          padding: "10px",
+          width: `calc(100% - ${sidebarOpen ? "200px" : "60px"})`,
+          overflowX: "auto",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            backgroundColor: "#3f51b5",
+            color: "white",
+            p: 4,
+            borderRadius: 1,
+          }}
+        >
+          <Typography variant="h6">User Management</Typography>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => handleOpen()}
+            sx={{ backgroundColor: "#f50057", "&:hover": { backgroundColor: "#c51162" } }}
+          >
+            ADD USER
+          </Button>
+        </Box>
 
-      <TableContainer component={Paper} style={{ marginTop: "10px" }}>
-        <Table>
-          <TableHead style={{ backgroundColor: "#f0f0f0" }}>
-            <TableRow>
-              <TableCell>S.No</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Role</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Joined Date</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {users.map((user, index) => (
-              <TableRow key={user.id}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.role}</TableCell>
-                <TableCell>{user.status}</TableCell>
-                <TableCell>{user.joined}</TableCell>
-                <TableCell>
-                  <Button size="small" color="primary" onClick={() => handleOpen(user)}>
-                    <EditIcon />
-                  </Button>
-                  <Button size="small" color="error">
-                    <DeleteIcon />
-                  </Button>
-                </TableCell>
+        <TableContainer component={Paper} sx={{ mt: 3 }}>
+          <Table>
+            <TableHead sx={{ backgroundColor: "#eeeeee" }}>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Role</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Joined Date</TableCell>
+                <TableCell>Actions</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      <Button variant="contained" color="secondary" style={{ marginTop: "10px", float: "right" }} onClick={() => handleOpen()}>
-        ADD NEW USER
-      </Button>
-
-      <UserModal open={open} onClose={handleClose} onSubmit={handleUserSubmit} editUser={editUser} />
-    </div>
+            </TableHead>
+            <TableBody>
+              {users.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>{user.id}</TableCell>
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.role}</TableCell>
+                  <TableCell>{user.status}</TableCell>
+                  <TableCell>{user.joined}</TableCell>
+                  <TableCell>
+                    <Box sx={{ display: "flex", gap: 1 }}>
+                      <EditIcon sx={{ cursor: "pointer", color: "#2196f3" }} onClick={() => handleOpen(user)} />
+                      <DeleteIcon sx={{ cursor: "pointer", color: "#f44336" }} />
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+      <UserModal open={open} handleClose={handleClose} user={editUser} handleUserSubmit={handleUserSubmit} />
+      <ToastContainer />
+    </Box>
   );
 };
 

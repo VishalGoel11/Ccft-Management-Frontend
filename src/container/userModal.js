@@ -11,6 +11,7 @@ import {
 
 const UserModal = ({ open, onClose, onSubmit, editUser }) => {
   const [userData, setUserData] = useState({
+    id: "", // Added ID field
     name: "",
     email: "",
     role: "User",
@@ -20,9 +21,18 @@ const UserModal = ({ open, onClose, onSubmit, editUser }) => {
 
   useEffect(() => {
     if (editUser) {
+      // If editing, use the existing user data
       setUserData(editUser);
     } else {
-      setUserData({ name: "", email: "", role: "User", status: "Active", password: "" });
+      // If adding, generate a new random ID (simulating backend behavior)
+      setUserData({
+        id: Math.floor(Math.random() * 900) + 100, // Simulated ID
+        name: "",
+        email: "",
+        role: "User",
+        status: "Active",
+        password: "",
+      });
     }
   }, [editUser]);
 
@@ -41,22 +51,87 @@ const UserModal = ({ open, onClose, onSubmit, editUser }) => {
         {editUser ? "Edit User" : "Create New User"}
       </DialogTitle>
       <DialogContent>
-        <TextField label="Full Name *" name="name" fullWidth margin="dense" variant="outlined" value={userData.name} onChange={handleChange} />
-        <TextField label="Email *" name="email" type="email" fullWidth margin="dense" variant="outlined" value={userData.email} onChange={handleChange} />
-        <TextField select label="Role *" name="role" fullWidth margin="dense" variant="outlined" value={userData.role} onChange={handleChange}>
+        {/* ID Field - Read-only */}
+        <TextField
+          label="User ID"
+          name="id"
+          fullWidth
+          margin="dense"
+          variant="outlined"
+          value={userData.id}
+          InputProps={{ readOnly: true }}
+        />
+
+        <TextField
+          label="Full Name *"
+          name="name"
+          fullWidth
+          margin="dense"
+          variant="outlined"
+          value={userData.name}
+          onChange={handleChange}
+        />
+
+        <TextField
+          label="Email *"
+          name="email"
+          type="email"
+          fullWidth
+          margin="dense"
+          variant="outlined"
+          value={userData.email}
+          onChange={handleChange}
+        />
+
+        <TextField
+          select
+          label="Role *"
+          name="role"
+          fullWidth
+          margin="dense"
+          variant="outlined"
+          value={userData.role}
+          onChange={handleChange}
+        >
           <MenuItem value="Admin">Admin</MenuItem>
           <MenuItem value="User">User</MenuItem>
         </TextField>
-        <TextField select label="Status *" name="status" fullWidth margin="dense" variant="outlined" value={userData.status} onChange={handleChange}>
+
+        <TextField
+          select
+          label="Status *"
+          name="status"
+          fullWidth
+          margin="dense"
+          variant="outlined"
+          value={userData.status}
+          onChange={handleChange}
+        >
           <MenuItem value="Active">Active</MenuItem>
           <MenuItem value="Inactive">Inactive</MenuItem>
           <MenuItem value="Pending">Pending</MenuItem>
         </TextField>
-        {!editUser && <TextField label="Password *" name="password" type="password" fullWidth margin="dense" variant="outlined" value={userData.password} onChange={handleChange} />}
+
+        {!editUser && (
+          <TextField
+            label="Password *"
+            name="password"
+            type="password"
+            fullWidth
+            margin="dense"
+            variant="outlined"
+            value={userData.password}
+            onChange={handleChange}
+          />
+        )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} variant="outlined">CANCEL</Button>
-        <Button onClick={handleSubmit} variant="contained" color="primary">{editUser ? "UPDATE" : "CREATE"}</Button>
+        <Button onClick={onClose} variant="outlined">
+          CANCEL
+        </Button>
+        <Button onClick={handleSubmit} variant="contained" color="primary">
+          {editUser ? "UPDATE" : "CREATE"}
+        </Button>
       </DialogActions>
     </Dialog>
   );

@@ -68,7 +68,7 @@ const Dashboard = () => {
           <AppBar position="fixed" sx={{ width: "calc(100% - 200px)" }} />
 
           <Container maxWidth="lg" sx={{ marginTop: -10 }}>
-            <Grid container justifyContent="center" spacing={2}>
+            {/* <Grid container justifyContent="center" spacing={2}>
               <Grid item xs={12}>
                 <Box display="flex" justifyContent="center">
                   <ResponsiveContainer width="100%" height={500}>
@@ -84,7 +84,7 @@ const Dashboard = () => {
                   </ResponsiveContainer>
                 </Box>
               </Grid>
-            </Grid>
+            </Grid> */}
 
             <Grid container spacing={2} mt={4}>
               {cardData.map((card, index) => (

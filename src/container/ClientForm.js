@@ -70,6 +70,26 @@ const ClientForm = ({
 
         <FormContainer>
           <form onSubmit={handleSubmit}>
+            {/* ID field - only visible in edit mode, non-editable */}
+            {formData.id && (
+              <StyledTextField
+                fullWidth
+                label="Client ID"
+                name="id"
+                value={formData.id || 'Will be generated automatically'}
+                InputProps={{
+                  readOnly: true,
+                }}
+                sx={{ 
+                  mb: 3,
+                  "& .MuiInputBase-input.Mui-disabled": {
+                    WebkitTextFillColor: "#666",
+                  }
+                }}
+                disabled
+              />
+            )}
+            
             <StyledTextField
               fullWidth
               label="Client Name"
