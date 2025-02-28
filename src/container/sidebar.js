@@ -8,10 +8,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PersonIcon from '@mui/icons-material/Person';
-
+import StoreIcon from '@mui/icons-material/Store'; // Import vendor icon
 
 const Sidebar = () => {
-
   const [open, setOpen] = useState(false);
   const [projectOpen, setProjectOpen] = useState(false);
 
@@ -59,15 +58,24 @@ const Sidebar = () => {
         </Tooltip>
         <Collapse in={projectOpen} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItem button onClick={() => navigate('/all-projects')} sx={{ pl: 4 }}>
-              <ListItemText primary="All Projects" />
-            </ListItem>
-            <ListItem button onClick={() => navigate('/completed-projects')} sx={{ pl: 4 }}>
-              <ListItemText primary="Completed Projects" />
-            </ListItem>
-            <ListItem button onClick={() => navigate('/pending-projects')} sx={{ pl: 4 }}>
-              <ListItemText primary="Pending Projects" />
-            </ListItem>
+            <Tooltip title="All Projects" placement="right" disableHoverListener={open}>
+              <ListItem button onClick={() => navigate('/all-projects')} sx={{ pl: 4 }}>
+                <ListItemIcon><PieChartIcon /></ListItemIcon>
+                {open && <ListItemText primary="All Projects" />}
+              </ListItem>
+            </Tooltip>
+            <Tooltip title="Completed Projects" placement="right" disableHoverListener={open}>
+              <ListItem button onClick={() => navigate('/completed-projects')} sx={{ pl: 4 }}>
+                <ListItemIcon><CheckCircleIcon /></ListItemIcon>
+                {open && <ListItemText primary="Completed Projects" />}
+              </ListItem>
+            </Tooltip>
+            <Tooltip title="Pending Projects" placement="right" disableHoverListener={open}>
+              <ListItem button onClick={() => navigate('/pending-projects')} sx={{ pl: 4 }}>
+                <ListItemIcon><HourglassFullIcon /></ListItemIcon>
+                {open && <ListItemText primary="Pending Projects" />}
+              </ListItem>
+            </Tooltip>
           </List>
         </Collapse>
         <Tooltip title="Clients" placement="right" disableHoverListener={open}>
@@ -86,6 +94,12 @@ const Sidebar = () => {
           <ListItem button onClick={() => navigate('/users')}>
             <ListItemIcon><PersonIcon /></ListItemIcon>
             {open && <ListItemText primary="Users" />}
+          </ListItem>
+        </Tooltip>
+        <Tooltip title="Vendors" placement="right" disableHoverListener={open}>
+          <ListItem button onClick={() => navigate('/vendors')}>
+            <ListItemIcon><StoreIcon /></ListItemIcon>
+            {open && <ListItemText primary="Vendors" />}
           </ListItem>
         </Tooltip>
       </List>

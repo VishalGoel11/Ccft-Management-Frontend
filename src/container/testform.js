@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Typography,
@@ -10,8 +10,12 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  IconButton,
+  Modal,
   styled,
 } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import VendorForm from './VendorForm';
 
 const StyledCard = styled(Card)({
   maxWidth: 600,
@@ -40,15 +44,32 @@ const StyledTextField = styled(TextField)({
 });
 
 const TestForm = ({
-  formData = {}, // Ensure formData is always an object
+  testData = {}, // Ensure testData is always an object
   onSubmit,
   onChange,
   onCancel,
   isEditMode = false,
+  vendors = [],
+  setVendors,
 }) => {
+  const [isVendorFormOpen, setIsVendorFormOpen] = useState(false);
+
+  const handleOpenVendorForm = () => {
+    setIsVendorFormOpen(true);
+  };
+
+  const handleCloseVendorForm = () => {
+    setIsVendorFormOpen(false);
+  };
+
+  const handleVendorFormSubmit = (newVendor) => {
+    setVendors([...vendors, newVendor]);
+    setIsVendorFormOpen(false);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit(testData);
   };
 
   return (
@@ -70,36 +91,51 @@ const TestForm = ({
 
         <FormContainer>
           <form onSubmit={handleSubmit}>
+            {/* ID field - only visible in edit mode, non-editable */}
+            {isEditMode && (
+              <StyledTextField
+                fullWidth
+                label="Test ID"
+                name="t_id"
+                value={testData.t_id || ''}
+                InputProps={{
+                  readOnly: true,
+                }}
+                sx={{ 
+                  mb: 3,
+                  "& .MuiInputBase-input.Mui-disabled": {
+                    WebkitTextFillColor: "#666",
+                  }
+                }}
+                disabled
+              />
+            )}
+            
             <StyledTextField
               fullWidth
               label="Test Name"
               name="t_name"
-              value={formData.t_name || ''}
+              value={testData.t_name || ''}
               onChange={onChange}
               sx={{ mb: 3 }}
               required
             />
 
-            <FormControl fullWidth sx={{ mb: 3 }}>
-              <InputLabel>Status</InputLabel>
-              <Select
-                name="t_status"
-                value={formData.t_status || ''}
-                onChange={onChange}
-                label="Status"
-                required
-              >
-                <MenuItem value="Pending">Pending</MenuItem>
-                <MenuItem value="Completed">Completed</MenuItem>
-                <MenuItem value="Failed">Failed</MenuItem>
-              </Select>
-            </FormControl>
+            <StyledTextField
+              fullWidth
+              label="Status"
+              name="t_status"
+              value={testData.t_status || ''}
+              onChange={onChange}
+              sx={{ mb: 3 }}
+              required
+            />
 
             <StyledTextField
               fullWidth
               label="Protocol"
               name="t_protocol"
-              value={formData.t_protocol || ''}
+              value={testData.t_protocol || ''}
               onChange={onChange}
               sx={{ mb: 3 }}
               required
@@ -109,7 +145,7 @@ const TestForm = ({
               fullWidth
               label="Update"
               name="t_update"
-              value={formData.t_update || ''}
+              value={testData.t_update || ''}
               onChange={onChange}
               sx={{ mb: 3 }}
               required
@@ -117,77 +153,45 @@ const TestForm = ({
 
             <StyledTextField
               fullWidth
-              label="Masked Report"
               name="t_masked_report"
-              value={formData.t_masked_report || ''}
+              type="file"
               onChange={onChange}
               sx={{ mb: 3 }}
               required
             />
 
-            <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
-              Vendor Information
-            </Typography>
-
-            <StyledTextField
-              fullWidth
-              label="Vendor Name"
-              name="vendor.v_name"
-              value={formData.vendor?.v_name || ''}
-              onChange={onChange}
-              sx={{ mb: 3 }}
-              required
-            />
-
-            <StyledTextField
-              fullWidth
-              label="Vendor POC"
-              name="vendor.v_poc"
-              value={formData.vendor?.v_poc || ''}
-              onChange={onChange}
-              sx={{ mb: 3 }}
-              required
-            />
-
-            <StyledTextField
-              fullWidth
-              label="Vendor Address"
-              name="vendor.v_add"
-              value={formData.vendor?.v_add || ''}
-              onChange={onChange}
-              sx={{ mb: 3 }}
-              required
-            />
-
-            <StyledTextField
-              fullWidth
-              label="Phone"
-              name="vendor.phone"
-              value={formData.vendor?.phone || ''}
-              onChange={onChange}
-              sx={{ mb: 3 }}
-              required
-            />
-
-            <StyledTextField
-              fullWidth
-              label="Vendor GST"
-              name="vendor.v_gst"
-              value={formData.vendor?.v_gst || ''}
-              onChange={onChange}
-              sx={{ mb: 3 }}
-              required
-            />
-
-            <StyledTextField
-              fullWidth
-              label="Date Added"
-              name="vendor.v_date_added"
-              value={formData.vendor?.v_date_added || ''}
-              onChange={onChange}
-              sx={{ mb: 3 }}
-              required
-            />
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <FormControl fullWidth>
+                <InputLabel>Vendor ID</InputLabel>
+                <Select
+                  name="vendor_id"
+                  value={testData.vendor?.v_id || ''}
+                  onChange={onChange}
+                  label="Vendor ID"
+                  required
+                >
+                  {vendors.map((vendor) => (
+                    <MenuItem key={vendor.id} value={vendor.id}>
+                      {vendor.v_name || vendor.id}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <IconButton 
+                color="primary" 
+                onClick={handleOpenVendorForm}
+                sx={{ 
+                  bgcolor: '#3f51b5', 
+                  color: 'white',
+                  '&:hover': {
+                    bgcolor: '#303f9f',
+                  },
+                  ml: 2
+                }}
+              >
+                <AddIcon />
+              </IconButton>
+            </Box>
 
             <Box
               sx={{
@@ -227,6 +231,32 @@ const TestForm = ({
           </form>
         </FormContainer>
       </CardContent>
+
+      <Modal
+        open={isVendorFormOpen}
+        onClose={handleCloseVendorForm}
+        aria-labelledby="vendor-form-modal"
+        aria-describedby="add-new-vendor-form"
+      >
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '80%',
+          maxWidth: 600,
+          bgcolor: 'background.paper',
+          boxShadow: 24,
+          p: 0,
+          borderRadius: '12px',
+          outline: 'none',
+        }}>
+          <VendorForm 
+            onSubmit={handleVendorFormSubmit}
+            onCancel={handleCloseVendorForm}
+          />
+        </Box>
+      </Modal>
     </StyledCard>
   );
 };

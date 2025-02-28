@@ -11,54 +11,56 @@ import {
   TableRow,
   Paper,
   Modal,
+  IconButton,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ClientForm from "./ClientForm";
+import AddIcon from "@mui/icons-material/Add";
+import VendorForm from "./VendorForm";
 import Sidebar from "./sidebar";
 import Swal from "sweetalert2";
 
-const Client = () => {
-  const [clients, setClients] = useState([]);
+const Vendor = () => {
+  const [vendors, setVendors] = useState([]);
   const [open, setOpen] = useState(false);
-  const [editingClient, setEditingClient] = useState(null);
+  const [editingVendor, setEditingVendor] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = [
+      const vendorResponse = [
         {
-          id: "acfb3f88-65f3-4f78-bedd-2ba10734df37",
-          c_name: "XYZ Laboratory",
-          c_full_address: "ABC Building Floor 6th Modinagar(201201) Ghz.",
-          c_gst: "234rt567ghj789",
-          c_poc: "dfg5678hjio789",
-          c_phone_number: "8979003126",
-          c_date: "Jan 30, 2025, 21:41",
+          v_id: "aef82a75-ed07-496d-8084-676acd29ae04",
+          v_name: "PQR Vendor",
+          v_poc: "34567dfghj",
+          v_add: "345678fghj",
+          phone: "8979003126",
+          v_gst: "5678fghjk",
+          v_date_added: "32-01-2025",
         },
       ];
-      setClients(response);
+      setVendors(vendorResponse);
     };
     fetchData();
   }, []);
 
-  const handleOpen = (client = null) => {
-    setEditingClient(client);
+  const handleOpen = (vendor = null) => {
+    setEditingVendor(vendor);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setEditingClient(null);
+    setEditingVendor(null);
   };
 
   const handleSubmit = (data) => {
-    if (editingClient) {
-      setClients(
-        clients.map((c) => (c.id === editingClient.id ? { ...c, ...data } : c))
+    if (editingVendor) {
+      setVendors(
+        vendors.map((v) => (v.v_id === editingVendor.v_id ? { ...v, ...data } : v))
       );
     } else {
-      setClients([...clients, { id: Date.now().toString(), ...data }]);
+      setVendors([...vendors, { v_id: Date.now().toString(), ...data }]);
     }
     handleClose();
   };
@@ -74,10 +76,10 @@ const Client = () => {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        setClients(clients.filter((client) => client.id !== id));
+        setVendors(vendors.filter((vendor) => vendor.v_id !== id));
         Swal.fire(
           'Deleted!',
-          'Your client has been deleted.',
+          'Your vendor has been deleted.',
           'success'
         );
       }
@@ -108,7 +110,7 @@ const Client = () => {
             borderRadius: 1,
           }}
         >
-          <Typography variant="h6">All Clients</Typography>
+          <Typography variant="h6">All Vendors</Typography>
           <Button
             variant="contained"
             color="secondary"
@@ -120,7 +122,7 @@ const Client = () => {
               },
             }}
           >
-            ADD NEW CLIENT
+            ADD NEW VENDOR
           </Button>
         </Box>
 
@@ -129,36 +131,36 @@ const Client = () => {
             <TableHead sx={{ backgroundColor: "#eeeeee" }}>
               <TableRow>
                 <TableCell>S.No</TableCell>
-                <TableCell>ID</TableCell> 
-                <TableCell>Client Name</TableCell>
+                <TableCell>ID</TableCell>
+                <TableCell>Vendor Name</TableCell>
+                <TableCell>Point of Contact</TableCell>
                 <TableCell>Address</TableCell>
+                <TableCell>Phone</TableCell>
                 <TableCell>GST</TableCell>
-                <TableCell>POC</TableCell>
-                <TableCell>Phone Number</TableCell>
                 <TableCell>Date Added</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {clients.map((client, index) => (
-                <TableRow key={client.id}>
+              {vendors.map((vendor, index) => (
+                <TableRow key={vendor.v_id}>
                   <TableCell>{index + 1}</TableCell>
-                  <TableCell>{client.id}</TableCell> 
-                  <TableCell>{client.c_name}</TableCell>
-                  <TableCell>{client.c_full_address}</TableCell>
-                  <TableCell>{client.c_gst}</TableCell>
-                  <TableCell>{client.c_poc}</TableCell>
-                  <TableCell>{client.c_phone_number}</TableCell>
-                  <TableCell>{client.c_date}</TableCell>
+                  <TableCell>{vendor.v_id}</TableCell>
+                  <TableCell>{vendor.v_name}</TableCell>
+                  <TableCell>{vendor.v_poc}</TableCell>
+                  <TableCell>{vendor.v_add}</TableCell>
+                  <TableCell>{vendor.phone}</TableCell>
+                  <TableCell>{vendor.v_gst}</TableCell>
+                  <TableCell>{vendor.v_date_added}</TableCell>
                   <TableCell>
                     <Box sx={{ display: "flex", gap: 1 }}>
                       <EditIcon
                         sx={{ cursor: "pointer", color: "#2196f3" }}
-                        onClick={() => handleOpen(client)}
+                        onClick={() => handleOpen(vendor)}
                       />
                       <DeleteIcon
                         sx={{ cursor: "pointer", color: "#f44336" }}
-                        onClick={() => handleDelete(client.id)}
+                        onClick={() => handleDelete(vendor.v_id)}
                       />
                     </Box>
                   </TableCell>
@@ -179,11 +181,11 @@ const Client = () => {
         }}
       >
         <Box sx={{ width: "100%", maxWidth: 600, mx: 2 }}>
-          <ClientForm
-            formData={editingClient || {}}
+          <VendorForm
+            vendorData={editingVendor || {}}
             onSubmit={handleSubmit}
             onCancel={handleClose}
-            isEditMode={!!editingClient}
+            isEditMode={!!editingVendor}
           />
         </Box>
       </Modal>
@@ -191,4 +193,4 @@ const Client = () => {
   );
 };
 
-export default Client;
+export default Vendor;

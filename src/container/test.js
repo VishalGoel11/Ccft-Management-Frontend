@@ -11,21 +11,31 @@ import {
   TableRow,
   Paper,
   Modal,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  IconButton,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
 import TestForm from "./testform";
+import VendorForm from "./VendorForm";
 import Sidebar from "./sidebar";
+import Swal from "sweetalert2";
 
 const Test = () => {
   const [tests, setTests] = useState([]);
+  const [vendors, setVendors] = useState([]);
   const [open, setOpen] = useState(false);
+  const [isVendorFormOpen, setIsVendorFormOpen] = useState(false);
   const [editingTest, setEditingTest] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = [
+      const testResponse = [
         {
           t_id: "631b227e-ff88-426d-b88b-21929f59b5ee",
           t_status: "Pending",
@@ -44,7 +54,19 @@ const Test = () => {
           },
         },
       ];
-      setTests(response);
+      const vendorResponse = [
+        {
+          v_id: "aef82a75-ed07-496d-8084-676acd29ae04",
+          v_name: "PQR Vendor",
+          v_poc: "34567dfghj",
+          v_add: "345678fghj",
+          phone: "8979003126",
+          v_gst: "5678fghjk",
+          v_date_added: "32-01-2025",
+        },
+      ];
+      setTests(testResponse);
+      setVendors(vendorResponse);
     };
     fetchData();
   }, []);
@@ -71,7 +93,40 @@ const Test = () => {
   };
 
   const handleDelete = (id) => {
-    setTests(tests.filter((test) => test.t_id !== id));
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setTests(tests.filter((test) => test.t_id !== id));
+        Swal.fire(
+          'Deleted!',
+          'Your test has been deleted.',
+          'success'
+        );
+      }
+    });
+  };
+
+  const handleOpenVendorForm = () => {
+    setIsVendorFormOpen(true);
+  };
+
+  const handleCloseVendorForm = () => {
+    setIsVendorFormOpen(false);
+  };
+
+  const handleVendorFormSubmit = (newVendor) => {
+    // Here you would save the new vendor to your backend
+    // and then update your local state with the new vendor
+    console.log('New vendor created:', newVendor);
+    setVendors([...vendors, newVendor]);
+    setIsVendorFormOpen(false);
   };
 
   return (
@@ -119,6 +174,7 @@ const Test = () => {
             <TableHead sx={{ backgroundColor: "#eeeeee" }}>
               <TableRow>
                 <TableCell>S.No</TableCell>
+                <TableCell>ID</TableCell>
                 <TableCell>Test Name</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell>Protocol</TableCell>
@@ -132,6 +188,7 @@ const Test = () => {
               {tests.map((test, index) => (
                 <TableRow key={test.t_id}>
                   <TableCell>{index + 1}</TableCell>
+                  <TableCell>{test.t_id}</TableCell>
                   <TableCell>{test.t_name}</TableCell>
                   <TableCell>{test.t_status}</TableCell>
                   <TableCell>{test.t_protocol}</TableCell>
@@ -168,9 +225,36 @@ const Test = () => {
       >
         <Box sx={{ width: "100%", maxWidth: 600, mx: 2 }}>
           <TestForm
-            testData={editingTest}
+            testData={editingTest || {}}
             onSubmit={handleSubmit}
             onCancel={handleClose}
+            isEditMode={!!editingTest}
+          />
+        </Box>
+      </Modal>
+
+      <Modal
+        open={isVendorFormOpen}
+        onClose={handleCloseVendorForm}
+        aria-labelledby="vendor-form-modal"
+        aria-describedby="add-new-vendor-form"
+      >
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '80%',
+          maxWidth: 600,
+          bgcolor: 'background.paper',
+          boxShadow: 24,
+          p: 0,
+          borderRadius: '12px',
+          outline: 'none',
+        }}>
+          <VendorForm 
+            onSubmit={handleVendorFormSubmit}
+            onCancel={handleCloseVendorForm}
           />
         </Box>
       </Modal>
