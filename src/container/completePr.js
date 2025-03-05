@@ -23,6 +23,10 @@ import Sidebar from "./sidebar";
 import TestForm from "./testform";
 import VendorForm from "./VendorForm";
 import ClientForm from "./ClientForm";
+import DeleteIcon from '@mui/icons-material/Delete';
+import Swal from "sweetalert2";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CompletePr = () => {
   const [projects, setProjects] = useState([]);
@@ -44,6 +48,8 @@ const CompletePr = () => {
     t_status: "completed"
   });
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -91,6 +97,29 @@ const CompletePr = () => {
     };
     fetchData();
   }, []);
+
+
+    const handleDelete = (s_id) => {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setProjects(projects.filter(project => project.s_id !== s_id));
+          Swal.fire({
+            title: "Deleted!",
+            text: "The project has been deleted.",
+            icon: "success"
+          });
+          toast.info("Project deleted successfully!");
+        }
+      });
+    };
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -201,6 +230,22 @@ const CompletePr = () => {
                     </a>
                   </TableCell>
                   <TableCell>{project.s_raw_data}</TableCell>
+                  <TableCell>
+                    <a href={`/${project.s_report}`} target="_blank" rel="noopener noreferrer">
+                      {project.s_report}
+                    </a>
+                  </TableCell>
+                  <TableCell>{project.s_raw_data}</TableCell>
+                  <TableCell sx={{ textTransform: 'capitalize' }}>{project.t_status}</TableCell>
+                  <TableCell>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                    
+                      <DeleteIcon 
+                        sx={{ cursor: 'pointer', color: '#f44336' }} 
+                        onClick={() => handleDelete(project.s_id)}
+                      />
+                    </Box>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

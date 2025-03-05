@@ -15,20 +15,18 @@ import {
   Modal,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-
-// Import your actual TestForm component
-// import TestForm from './TestForm';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  maxWidth: 600,
-  margin: '32px auto',
+  maxWidth: 600, // Increased maxWidth to make the card wider
+  margin: '16px auto', // Adjusted margin to make the card smaller
   backgroundColor: '#f8fafc',
   boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
   borderRadius: '12px',
 }));
 
 const FormContainer = styled(Box)(({ theme }) => ({
-  padding: '24px',
+  padding: '16px', // Adjusted padding to make the container smaller
   backgroundColor: 'white',
   borderRadius: '8px',
 }));
@@ -36,6 +34,8 @@ const FormContainer = styled(Box)(({ theme }) => ({
 const StyledTextField = styled(TextField)({
   '& .MuiOutlinedInput-root': {
     backgroundColor: 'white',
+    fontSize: '0.875rem', // Decreased font size
+    height: '40px', // Decreased height
     '&:hover fieldset': {
       borderColor: '#3f51b5',
     },
@@ -52,7 +52,6 @@ const TestSelectWithAddBtn = styled(Box)({
   width: '100%',
 });
 
-// Mock TestForm component with matching styles to ProjectForm
 const TestForm = ({ onSubmit, onCancel }) => {
   const [testData, setTestData] = useState({
     testName: '',
@@ -81,11 +80,11 @@ const TestForm = ({ onSubmit, onCancel }) => {
         <Box sx={{ 
           bgcolor: '#3f51b5', 
           color: 'white', 
-          p: 3, 
+          p: 2, // Adjusted padding to make the box smaller
           borderTopLeftRadius: '12px',
           borderTopRightRadius: '12px'
         }}>
-          <Typography variant="h5">Add New Test</Typography>
+          <Typography variant="h6" sx={{ fontSize: '1rem' }}>Add New Test</Typography> {/* Adjusted variant to make the text smaller */}
         </Box>
 
         <FormContainer>
@@ -96,18 +95,19 @@ const TestForm = ({ onSubmit, onCancel }) => {
               name="testName"
               value={testData.testName}
               onChange={handleChange}
-              sx={{ mb: 3 }}
+              sx={{ mb: 2 }} // Adjusted margin to make the field smaller
               required
             />
 
-            <FormControl fullWidth sx={{ mb: 3 }}>
-              <InputLabel>Test Type</InputLabel>
+            <FormControl fullWidth sx={{ mb: 2 }}> {/* Adjusted margin to make the control smaller */}
+              <InputLabel sx={{ fontSize: '0.875rem' }}>Test Type</InputLabel>
               <Select
                 name="testType"
                 value={testData.testType}
                 onChange={handleChange}
                 label="Test Type"
                 required
+                sx={{ fontSize: '0.875rem', height: '40px' }} // Decreased font size and height
               >
                 <MenuItem value="type1">Type 1</MenuItem>
                 <MenuItem value="type2">Type 2</MenuItem>
@@ -123,14 +123,14 @@ const TestForm = ({ onSubmit, onCancel }) => {
               onChange={handleChange}
               multiline
               rows={3}
-              sx={{ mb: 3 }}
+              sx={{ mb: 2 }} // Adjusted margin to make the field smaller
             />
 
             <Box sx={{ 
               display: "flex", 
               justifyContent: "flex-end", 
-              gap: 2, 
-              mt: 4 
+              gap: 1, // Adjusted gap to make the box smaller
+              mt: 3 // Adjusted margin to make the box smaller
             }}>
               <Button
                 variant="outlined"
@@ -138,6 +138,7 @@ const TestForm = ({ onSubmit, onCancel }) => {
                 sx={{
                   color: '#3f51b5',
                   borderColor: '#3f51b5',
+                  fontSize: '0.875rem', // Decreased font size
                   '&:hover': {
                     borderColor: '#303f9f',
                     backgroundColor: 'rgba(63, 81, 181, 0.04)',
@@ -151,6 +152,7 @@ const TestForm = ({ onSubmit, onCancel }) => {
                 variant="contained"
                 sx={{
                   bgcolor: '#3f51b5',
+                  fontSize: '0.875rem', // Decreased font size
                   '&:hover': {
                     bgcolor: '#303f9f',
                   },
@@ -172,7 +174,7 @@ const ProjectForm = ({
   onChange, 
   onCancel,
   isEditMode = false,
-  testOptions = [] // Array of available test options
+  testOptions = []
 }) => {
   const [isTestFormOpen, setIsTestFormOpen] = useState(false);
 
@@ -190,13 +192,8 @@ const ProjectForm = ({
   };
 
   const handleTestFormSubmit = (newTest) => {
-    // Here you would save the new test to your backend
-    // and then update your local state with the new test
     console.log('New test created:', newTest);
     setIsTestFormOpen(false);
-    
-    // Ideally, you'd refresh the test options list
-    // or add the new test to your options and select it
   };
 
   return (
@@ -205,19 +202,18 @@ const ProjectForm = ({
         <Box sx={{ 
           bgcolor: '#3f51b5', 
           color: 'white', 
-          p: 3, 
+          p: 1, // Adjusted padding to make the box smaller
           borderTopLeftRadius: '12px',
           borderTopRightRadius: '12px'
         }}>
-          <Typography variant="h5">
+          <Typography variant="h6" sx={{ fontSize: '1rem' }}>
             {isEditMode ? 'Edit Project' : 'Create New Project'}
           </Typography>
         </Box>
 
         <FormContainer>
           <form onSubmit={handleSubmit}>
-            {/* ID field - only visible in edit mode, non-editable */}
-            {formData.id && (
+            {isEditMode && (
               <StyledTextField
                 fullWidth
                 label="Project ID"
@@ -227,7 +223,7 @@ const ProjectForm = ({
                   readOnly: true,
                 }}
                 sx={{ 
-                  mb: 3,
+                  mb: 2, // Adjusted margin to make the field smaller
                   "& .MuiInputBase-input.Mui-disabled": {
                     WebkitTextFillColor: "#666",
                   }
@@ -242,20 +238,20 @@ const ProjectForm = ({
               name="s_name"
               value={formData.s_name}
               onChange={onChange}
-              sx={{ mb: 3 }}
+              sx={{ mb: 2 }} // Adjusted margin to make the field smaller
               required
             />
 
-            {/* Test ID as dropdown with add button */}
-            <TestSelectWithAddBtn sx={{ mb: 3 }}>
+            <TestSelectWithAddBtn sx={{ mb: 2 }}> {/* Adjusted margin to make the box smaller */}
               <FormControl fullWidth>
-                <InputLabel>Test ID</InputLabel>
+                <InputLabel sx={{ fontSize: '0.875rem' }}>Test ID</InputLabel>
                 <Select
                   name="t_id"
                   value={formData.t_id}
                   onChange={onChange}
                   label="Test ID"
                   required
+                  sx={{ fontSize: '0.875rem', height: '40px' }} // Decreased font size and height
                 >
                   {testOptions.map((test) => (
                     <MenuItem key={test.id} value={test.id}>
@@ -282,25 +278,67 @@ const ProjectForm = ({
 
             <StyledTextField
               fullWidth
-              label="Date Received"
-              name="s_date_received"
+              label="Entry Date"
+              name="s_entry_date"
               type="date"
-              value={formData.s_date_received}
+              value={formData.s_entry_date}
               onChange={onChange}
               InputLabelProps={{ shrink: true }}
-              sx={{ mb: 3 }}
+              sx={{ mb: 2 }} // Adjusted margin to make the field smaller
               required
             />
 
             <StyledTextField
               fullWidth
-              label="Report"
-              name="s_report"
-              value={formData.s_report}
+              label="Delivery Date"
+              name="s_delivery_date"
+              type="date"
+              value={formData.s_delivery_date}
               onChange={onChange}
-              sx={{ mb: 3 }}
+              InputLabelProps={{ shrink: true }}
+              sx={{ mb: 2 }} // Adjusted margin to make the field smaller
               required
             />
+
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <StyledTextField
+                fullWidth
+                label="Report"
+                name="s_report"
+                value={formData.s_report}
+                onChange={onChange}
+                sx={{ mr: 2 }} // Adjusted margin to make the field smaller
+                required
+              />
+              <IconButton
+                color="primary"
+                component="label"
+                sx={{
+                  bgcolor: '#3f51b5',
+                  color: 'white',
+                  '&:hover': {
+                    bgcolor: '#303f9f',
+                  },
+                }}
+              >
+                <UploadFileIcon />
+                <input
+                  type="file"
+                  hidden
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      onChange({
+                        target: {
+                          name: 's_report',
+                          value: file.name,
+                        },
+                      });
+                    }
+                  }}
+                />
+              </IconButton>
+            </Box>
 
             <StyledTextField
               fullWidth
@@ -309,19 +347,21 @@ const ProjectForm = ({
               value={formData.s_raw_data}
               onChange={onChange}
               multiline
-              rows={3}
-              sx={{ mb: 3 }}
+              rows={0}
+              InputLabelProps={{ shrink: true }} // Ensure the label shrinks
+              sx={{ mb: 2 }} // Adjusted margin to make the field smaller
               required
             />
 
-            <FormControl fullWidth sx={{ mb: 3 }}>
-              <InputLabel>Status</InputLabel>
+            <FormControl fullWidth sx={{ mb: 2 }}> {/* Adjusted margin to make the control smaller */}
+              <InputLabel sx={{ fontSize: '0.875rem' }}>Status</InputLabel>
               <Select
                 name="t_status"
                 value={formData.t_status}
                 onChange={onChange}
                 label="Status"
                 required
+                sx={{ fontSize: '0.875rem', height: '40px' }} // Decreased font size and height
               >
                 <MenuItem value="new">New</MenuItem>
                 <MenuItem value="pending">Pending</MenuItem>
@@ -332,8 +372,8 @@ const ProjectForm = ({
             <Box sx={{ 
               display: "flex", 
               justifyContent: "flex-end", 
-              gap: 2, 
-              mt: 4 
+              gap: 1, // Adjusted gap to make the box smaller
+              mt: 3 // Adjusted margin to make the box smaller
             }}>
               <Button
                 variant="outlined"
@@ -341,6 +381,7 @@ const ProjectForm = ({
                 sx={{
                   color: '#3f51b5',
                   borderColor: '#3f51b5',
+                  fontSize: '0.875rem', // Decreased font size
                   '&:hover': {
                     borderColor: '#303f9f',
                     backgroundColor: 'rgba(63, 81, 181, 0.04)',
@@ -354,6 +395,7 @@ const ProjectForm = ({
                 variant="contained"
                 sx={{
                   bgcolor: '#3f51b5',
+                  fontSize: '0.875rem', // Decreased font size
                   '&:hover': {
                     bgcolor: '#303f9f',
                   },
@@ -366,7 +408,6 @@ const ProjectForm = ({
         </FormContainer>
       </CardContent>
 
-      {/* Test Form Modal */}
       <Modal
         open={isTestFormOpen}
         onClose={handleCloseTestForm}
@@ -379,14 +420,15 @@ const ProjectForm = ({
           left: '50%',
           transform: 'translate(-50%, -50%)',
           width: '80%',
-          maxWidth: 600,
+          maxWidth: 400, // Adjusted maxWidth to make the modal smaller
+          maxHeight: '60vh', // Adjusted maxHeight to ensure the modal fits within the viewport height
+          overflowY: 'auto', // Add scroll if content overflows
           bgcolor: 'background.paper',
           boxShadow: 24,
-          p: 0,
+          p: 2, // Adjusted padding to make the box smaller
           borderRadius: '12px',
           outline: 'none',
         }}>
-          {/* Replace this with your actual TestForm component import */}
           <TestForm 
             onSubmit={handleTestFormSubmit}
             onCancel={handleCloseTestForm}

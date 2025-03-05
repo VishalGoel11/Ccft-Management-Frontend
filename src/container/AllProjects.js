@@ -28,7 +28,8 @@ const AllProjectsPage = () => {
     id: "",
     s_name: "",
     t_id: "",
-    s_date_received: "",
+    s_entry_date: "",
+    s_delivery_date: "",
     s_report: "",
     s_raw_data: "",
     t_status: "new"
@@ -43,7 +44,8 @@ const AllProjectsPage = () => {
           s_id: "609ff9c1-69ba-499d-81e2-833e4b99d4d1",
           s_name: "ABC Sample",
           t_id: "T001",
-          s_date_received: "ABC building 7th Floor Modinagar(201204) Ghaziabad",
+          s_entry_date: "2023-01-01",
+          s_delivery_date: "2023-01-10",
           s_report: "Report_01.pdf",
           s_raw_data: "This report contains data of the test of ABC client's sample s1",
           t_status: "completed"
@@ -53,7 +55,8 @@ const AllProjectsPage = () => {
           s_id: "709ff9c1-69ba-499d-81e2-833e4b99d4d2",
           s_name: "XYZ Sample",
           t_id: "T002",
-          s_date_received: "XYZ Complex, Sector 12",
+          s_entry_date: "2023-02-01",
+          s_delivery_date: "2023-02-10",
           s_report: "Report_02.pdf",
           s_raw_data: "XYZ client sample data",
           t_status: "pending"
@@ -63,7 +66,8 @@ const AllProjectsPage = () => {
           s_id: "809ff9c1-69ba-499d-81e2-833e4b99d4d3",
           s_name: "New Sample",
           t_id: "T003",
-          s_date_received: "New Location",
+          s_entry_date: "2023-03-01",
+          s_delivery_date: "2023-03-10",
           s_report: "Report_03.pdf",
           s_raw_data: "New sample test data",
           t_status: "new"
@@ -97,7 +101,8 @@ const AllProjectsPage = () => {
         id: `P${Math.floor(Math.random() * 900) + 100}`,
         s_name: "",
         t_id: "",
-        s_date_received: "",
+        s_entry_date: "",
+        s_delivery_date: "",
         s_report: "",
         s_raw_data: "",
         t_status: "new"
@@ -113,7 +118,8 @@ const AllProjectsPage = () => {
       id: "",
       s_name: "",
       t_id: "",
-      s_date_received: "",
+      s_entry_date: "",
+      s_delivery_date: "",
       s_report: "",
       s_raw_data: "",
       t_status: "new"
@@ -212,7 +218,8 @@ const AllProjectsPage = () => {
                 <TableCell>ID</TableCell>
                 <TableCell>Sample Name</TableCell>
                 <TableCell>Test ID</TableCell>
-                <TableCell>Date Received</TableCell>
+                <TableCell>Entry Date</TableCell>
+                <TableCell>Delivery Date</TableCell>
                 <TableCell>Report</TableCell>
                 <TableCell>Raw Data</TableCell>
                 <TableCell>Status</TableCell>
@@ -234,7 +241,8 @@ const AllProjectsPage = () => {
                   <TableCell>{project.id}</TableCell>
                   <TableCell>{project.s_name}</TableCell>
                   <TableCell>{project.t_id || "N/A"}</TableCell>
-                  <TableCell>{project.s_date_received}</TableCell>
+                  <TableCell>{project.s_entry_date}</TableCell>
+                  <TableCell>{project.s_delivery_date}</TableCell>
                   <TableCell>
                     <a href={`/${project.s_report}`} target="_blank" rel="noopener noreferrer">
                       {project.s_report}
