@@ -59,18 +59,67 @@ const Client = () => {
     setEditingClient(null);
   };
 
-  const handleSubmit = (data) => {
-    if (editingClient) {
-      setClients(
-        clients.map((c) => (c.id === editingClient.id ? { ...c, ...data } : c))
-      );
-    } else {
-      setClients([...clients, { id: Date.now().toString(), ...data }]);
+  const handleSubmit = async (data) => {
+    try {
+      const token = getLocalStorage();
+      let response;
+      
+      if (editingClient) {
+        // If editing, send a PUT request
+        response = await handleHttpRequest(
+          "PUT", 
+          `${getAllClient}/${editingClient.id}`, 
+          data, 
+          true, 
+          token
+        );
+        
+        if (response.status === 202) {
+          setClients(
+            clients.map((c) => (c.id === editingClient.id ? { ...c, ...data } : c))
+          );
+          Swal.fire({
+            title: 'Success',
+            text: 'Client updated successfully',
+            icon: 'success',
+            timer: 1500,
+            showConfirmButton: false
+          });
+        } else {
+          Swal.fire('Error', 'Failed to update client', 'error');
+        }
+      } else {
+        // If creating new, send a POST request
+        response = await handleHttpRequest(
+          "POST", 
+          getAllClient, 
+          data, 
+          true, 
+          token
+        );
+        
+        if (response.status === 201) {
+          setClients([...clients, response.data]);
+          Swal.fire({
+            title: 'Success',
+            text: 'Client added successfully',
+            icon: 'success',
+            timer: 1500,
+            showConfirmButton: false
+          });
+        } else {
+          Swal.fire('Error', 'Failed to add client', 'error');
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire('Error', 'Something went wrong', 'error');
     }
+    
     handleClose();
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -79,14 +128,42 @@ const Client = () => {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        setClients(clients.filter((client) => client.id !== id));
-        Swal.fire(
-          'Deleted!',
-          'Your client has been deleted.',
-          'success'
-        );
+        try {
+          const token = getLocalStorage();
+          const response = await handleHttpRequest(
+            "DELETE",
+            `${getAllClient}/${id}`,
+            "",
+            true,
+            token
+          );
+          
+          if (response.status === 200 || response.status === 204) {
+            setClients(clients.filter((client) => client.id !== id));
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'Your client has been deleted.',
+              icon: 'success',
+              timer: 1500,
+              showConfirmButton: false
+            });
+          } else {
+            Swal.fire(
+              'Error',
+              'Failed to delete client',
+              'error'
+            );
+          }
+        } catch (error) {
+          console.log(error);
+          Swal.fire(
+            'Error',
+            'Something went wrong',
+            'error'
+          );
+        }
       }
     });
   };
@@ -111,7 +188,7 @@ const Client = () => {
             alignItems: "center",
             backgroundColor: "#3f51b5",
             color: "white",
-            p: 4,
+            p: 2,
             borderRadius: 1,
           }}
         >
@@ -125,14 +202,16 @@ const Client = () => {
               "&:hover": {
                 backgroundColor: "#c51162",
               },
+              py: 1,
             }}
+            size="small"
           >
             ADD NEW CLIENT
           </Button>
         </Box>
 
         <TableContainer component={Paper} sx={{ mt: 3 }}>
-          <Table>
+          <Table size="small">
             <TableHead sx={{ backgroundColor: "#eeeeee" }}>
               <TableRow>
                 <TableCell>S.No</TableCell>
@@ -164,16 +243,18 @@ const Client = () => {
                       <IconButton
                         onClick={() => handleOpen(client)}
                         aria-label="edit"
-                        sx={{ color: "#2196f3" }}
+                        sx={{ color: "#2196f3", p: 0.5 }}
+                        size="small"
                       >
-                        <EditIcon />
+                        <EditIcon fontSize="small" />
                       </IconButton>
                       <IconButton
                         onClick={() => handleDelete(client.id)}
                         aria-label="delete"
-                        sx={{ color: "#f44336" }}
+                        sx={{ color: "#f44336", p: 0.5 }}
+                        size="small"
                       >
-                        <DeleteIcon />
+                        <DeleteIcon fontSize="small" />
                       </IconButton>
                     </Box>
                   </TableCell>
@@ -193,7 +274,13 @@ const Client = () => {
           justifyContent: "center",
         }}
       >
-        <Box sx={{ width: "100%", maxWidth: 600, mx: 2 }}>
+        <Box sx={{ 
+          width: "100%", 
+          maxWidth: 500, 
+          mx: 2,
+          maxHeight: '80vh',
+          outline: 'none' 
+        }}>
           <ClientForm
             formData={editingClient || {}}
             onSubmit={handleSubmit}

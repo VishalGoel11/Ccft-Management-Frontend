@@ -14,17 +14,19 @@ import {
 } from '@mui/material';
 
 const StyledCard = styled(Card)({
-  maxWidth: 600,
-  margin: '32px auto',
+  maxWidth: 500,
+  margin: '0 auto',
   backgroundColor: '#f8fafc',
   boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
   borderRadius: '12px',
 });
 
 const FormContainer = styled(Box)({
-  padding: '24px',
+  padding: '16px',
   backgroundColor: 'white',
   borderRadius: '8px',
+  maxHeight: '70vh',
+  overflowY: 'auto',
 });
 
 const StyledTextField = styled(TextField)({
@@ -75,34 +77,35 @@ const ClientForm = ({
           sx={{
             bgcolor: '#3f51b5',
             color: 'white',
-            p: 3,
+            p: 2,
             borderTopLeftRadius: '12px',
             borderTopRightRadius: '12px',
           }}
         >
-          <Typography variant="h5">
+          <Typography variant="h6">
             {isEditMode ? 'Edit Client' : 'Create New Client'}
           </Typography>
         </Box>
 
         <FormContainer>
           <form onSubmit={handleSubmit}>
-            {/* ID field - only visible in edit mode, non-editable */}
-            {localFormData.id && (
+            {/* Client ID field - only visible in edit mode, non-editable */}
+            {isEditMode && (
               <StyledTextField
                 fullWidth
                 label="Client ID"
-                name="id"
-                value={localFormData.id || 'Will be generated automatically'}
+                name="c_id"
+                value={localFormData.c_id || 'Will be generated automatically'}
                 InputProps={{
                   readOnly: true,
                 }}
                 sx={{ 
-                  mb: 3,
+                  mb: 2,
                   "& .MuiInputBase-input.Mui-disabled": {
                     WebkitTextFillColor: "#666",
                   }
                 }}
+                size="small"
                 disabled
               />
             )}
@@ -110,78 +113,93 @@ const ClientForm = ({
             <StyledTextField
               fullWidth
               label="Client Name"
-              name="client_name"
-              value={localFormData.client_name || ''}
+              name="c_name"
+              value={localFormData.c_name || ''}
               onChange={handleChange}
-              sx={{ mb: 3 }}
-              required
-            />
-
-            <StyledTextField
-              fullWidth
-              label="Client Email"
-              name="client_email"
-              type="email"
-              value={localFormData.client_email || ''}
-              onChange={handleChange}
-              sx={{ mb: 3 }}
-              required
-            />
-
-            <StyledTextField
-              fullWidth
-              label="Client Phone"
-              name="client_phone"
-              type="tel"
-              value={localFormData.client_phone || ''}
-              onChange={handleChange}
-              sx={{ mb: 3 }}
-              required
-            />
-
-            <StyledTextField
-              fullWidth
-              label="Company Name"
-              name="company_name"
-              value={localFormData.company_name || ''}
-              onChange={handleChange}
-              sx={{ mb: 3 }}
+              sx={{ mb: 2 }}
+              size="small"
               required
             />
 
             <StyledTextField
               fullWidth
               label="Address"
-              name="client_address"
-              value={localFormData.client_address || ''}
+              name="c_full_address"
+              value={localFormData.c_full_address || ''}
               onChange={handleChange}
               multiline
-              rows={3}
-              sx={{ mb: 3 }}
+              rows={2}
+              sx={{ mb: 2 }}
+              size="small"
               required
             />
 
-            <FormControl fullWidth sx={{ mb: 3 }}>
-              <InputLabel>Status</InputLabel>
-              <Select
-                name="client_status"
-                value={localFormData.client_status || ''}
+            <StyledTextField
+              fullWidth
+              label="GST Number"
+              name="c_gst"
+              value={localFormData.c_gst || ''}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+              size="small"
+              required
+            />
+
+            <StyledTextField
+              fullWidth
+              label="Point of Contact"
+              name="c_poc"
+              value={localFormData.c_poc || ''}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+              size="small"
+              required
+            />
+
+            <StyledTextField
+              fullWidth
+              label="Phone Number"
+              name="c_phone_number"
+              type="tel"
+              value={localFormData.c_phone_number || ''}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+              size="small"
+              required
+            />
+
+            <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+              <StyledTextField
+                label="Arrival Date"
+                name="c_received_date"
+                type="date"
+                value={localFormData.c_received_date || ''}
                 onChange={handleChange}
-                label="Status"
+                InputLabelProps={{ shrink: true }}
+                size="small"
                 required
-              >
-                <MenuItem value="active">Active</MenuItem>
-                <MenuItem value="inactive">Inactive</MenuItem>
-                <MenuItem value="suspended">Suspended</MenuItem>
-              </Select>
-            </FormControl>
+                sx={{ flex: 1 }}
+              />
+
+              <StyledTextField
+                label="Delivery Date"
+                name="c_delivery_date"
+                type="date"
+                value={localFormData.c_delivery_date || ''}
+                onChange={handleChange}
+                InputLabelProps={{ shrink: true }}
+                size="small"
+                required
+                sx={{ flex: 1 }}
+              />
+            </Box>
 
             <Box
               sx={{
                 display: 'flex',
                 justifyContent: 'flex-end',
                 gap: 2,
-                mt: 4,
+                mt: 2,
               }}
             >
               <Button
@@ -195,6 +213,7 @@ const ClientForm = ({
                     backgroundColor: 'rgba(63, 81, 181, 0.04)',
                   },
                 }}
+                size="small"
               >
                 Cancel
               </Button>
@@ -207,6 +226,7 @@ const ClientForm = ({
                     bgcolor: '#303f9f',
                   },
                 }}
+                size="small"
               >
                 {isEditMode ? 'Update' : 'Create'}
               </Button>

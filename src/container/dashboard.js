@@ -21,6 +21,7 @@ import AutorenewIcon from "@mui/icons-material/Autorenew";
 import HourglassFullIcon from "@mui/icons-material/HourglassFull";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import Sidebar from "./sidebar";
+import AllProjects from "./AllProjects"; // Import the AllProjects component
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -36,13 +37,6 @@ const Dashboard = () => {
   ];
 
   const cardData = [
-    {
-      title: "All Projects",
-      value: 55,
-      icon: <ShoppingCartIcon fontSize="large" />,
-      color: "linear-gradient(to right, #4facfe, #00f2fe)",
-      path: "/all-projects"
-    },
     {
       title: "Completed Projects",
       value: 30,
@@ -68,50 +62,69 @@ const Dashboard = () => {
           <AppBar position="fixed" sx={{ width: "calc(100% - 200px)" }} />
 
           <Container maxWidth="lg" sx={{ marginTop: -10 }}>
-            {/* <Grid container justifyContent="center" spacing={2}>
-              <Grid item xs={12}>
-                <Box display="flex" justifyContent="center">
-                  <ResponsiveContainer width="100%" height={500}>
-                    <BarChart data={data} margin={{ top: 70, right: 30, left: 0, bottom: 10 }}>
-                      <XAxis dataKey="day" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Bar dataKey="All" fill="#4facfe" />
-                      <Bar dataKey="Completed" fill="#4caf50" />
-                      <Bar dataKey="Pending" fill="#f44336" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </Box>
-              </Grid>
-            </Grid> */}
-
             <Grid container spacing={2} mt={4}>
-              {cardData.map((card, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                  <Card
-                    sx={{
-                      background: card.color,
-                      borderRadius: 3,
-                      p: 2,
-                      color: "white",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-between",
-                      boxShadow: 3,
-                      cursor: "pointer"
-                    }}
-                    onClick={() => navigate(card.path)}
-                  >
-                    <Typography variant="h6">{card.title}</Typography>
-                    <Box display="flex" alignItems="center" justifyContent="space-between">
-                      {card.icon}
-                      <Typography variant="h4">{card.value}</Typography>
-                    </Box>
-                  </Card>
-                </Grid>
-              ))}
+              <Grid item xs={12} sm={6}>
+                <Card
+                  sx={{
+                    background: cardData[0].color,
+                    borderRadius: 3,
+                    p: 2,
+                    color: "white",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    boxShadow: 3,
+                    cursor: "pointer"
+                  }}
+                  onClick={() => navigate(cardData[0].path)}
+                >
+                  <Typography variant="h6">{cardData[0].title}</Typography>
+                  <Box display="flex" alignItems="center" justifyContent="space-between">
+                    {cardData[0].icon}
+                    <Typography variant="h4">{cardData[0].value}</Typography>
+                  </Box>
+                </Card>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Card
+                  sx={{
+                    background: cardData[1].color,
+                    borderRadius: 3,
+                    p: 2,
+                    color: "white",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    boxShadow: 3,
+                    cursor: "pointer"
+                  }}
+                  onClick={() => navigate(cardData[1].path)}
+                >
+                  <Typography variant="h6">{cardData[1].title}</Typography>
+                  <Box display="flex" alignItems="center" justifyContent="space-between">
+                    {cardData[1].icon}
+                    <Typography variant="h4">{cardData[1].value}</Typography>
+                  </Box>
+                </Card>
+              </Grid>
             </Grid>
+
+            <Box mt={4}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="h6">Completed Projects Table</Typography>
+                  {/* Add your completed projects table here */}
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="h6">Pending Projects Table</Typography>
+                  {/* Add your pending projects table here */}
+                </Grid>
+              </Grid>
+            </Box>
+
+            <Box mt={4}>
+              <AllProjects /> {/* Include the AllProjects component */}
+            </Box>
           </Container>
         </Box>
       </Box>
