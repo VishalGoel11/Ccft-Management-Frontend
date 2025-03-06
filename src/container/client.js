@@ -11,6 +11,7 @@ import {
   TableRow,
   Paper,
   Modal,
+  IconButton,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -30,23 +31,23 @@ const Client = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try{
-                const token = getLocalStorage();
-                if(token === null){
-                  navigate("/")
-                }
-                const response = await handleHttpRequest("GET",getAllClient, "", true,token);
-                if(response.status === 202){
-                  setClients(response.data);
-                }else{
-                  console.log('------------Error----------');
-                }
-              }catch(error){
-                console.log(error);
-              }
+      try {
+        const token = getLocalStorage();
+        if (token === null) {
+          navigate("/");
+        }
+        const response = await handleHttpRequest("GET", getAllClient, "", true, token);
+        if (response.status === 202) {
+          setClients(response.data);
+        } else {
+          console.log('------------Error----------');
+        }
+      } catch (error) {
+        console.log(error);
+      }
     };
     fetchData();
-  }, []);
+  }, [navigate]);
 
   const handleOpen = (client = null) => {
     setEditingClient(client);
@@ -160,14 +161,20 @@ const Client = () => {
                   <TableCell>{client.c_delivery_date}</TableCell>
                   <TableCell>
                     <Box sx={{ display: "flex", gap: 1 }}>
-                      <EditIcon
-                        sx={{ cursor: "pointer", color: "#2196f3" }}
+                      <IconButton
                         onClick={() => handleOpen(client)}
-                      />
-                      <DeleteIcon
-                        sx={{ cursor: "pointer", color: "#f44336" }}
+                        aria-label="edit"
+                        sx={{ color: "#2196f3" }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
                         onClick={() => handleDelete(client.id)}
-                      />
+                        aria-label="delete"
+                        sx={{ color: "#f44336" }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
                     </Box>
                   </TableCell>
                 </TableRow>

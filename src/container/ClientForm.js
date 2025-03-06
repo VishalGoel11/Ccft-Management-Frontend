@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
@@ -46,9 +46,26 @@ const ClientForm = ({
   onCancel,
   isEditMode = false,
 }) => {
+  const [localFormData, setLocalFormData] = useState(formData);
+
+  useEffect(() => {
+    setLocalFormData(formData);
+  }, [formData]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setLocalFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+    if (onChange) {
+      onChange(e);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit(localFormData);
   };
 
   return (
@@ -71,12 +88,12 @@ const ClientForm = ({
         <FormContainer>
           <form onSubmit={handleSubmit}>
             {/* ID field - only visible in edit mode, non-editable */}
-            {formData.id && (
+            {localFormData.id && (
               <StyledTextField
                 fullWidth
                 label="Client ID"
                 name="id"
-                value={formData.id || 'Will be generated automatically'}
+                value={localFormData.id || 'Will be generated automatically'}
                 InputProps={{
                   readOnly: true,
                 }}
@@ -94,8 +111,8 @@ const ClientForm = ({
               fullWidth
               label="Client Name"
               name="client_name"
-              value={formData.client_name || ''}
-              onChange={onChange}
+              value={localFormData.client_name || ''}
+              onChange={handleChange}
               sx={{ mb: 3 }}
               required
             />
@@ -105,8 +122,8 @@ const ClientForm = ({
               label="Client Email"
               name="client_email"
               type="email"
-              value={formData.client_email || ''}
-              onChange={onChange}
+              value={localFormData.client_email || ''}
+              onChange={handleChange}
               sx={{ mb: 3 }}
               required
             />
@@ -116,8 +133,8 @@ const ClientForm = ({
               label="Client Phone"
               name="client_phone"
               type="tel"
-              value={formData.client_phone || ''}
-              onChange={onChange}
+              value={localFormData.client_phone || ''}
+              onChange={handleChange}
               sx={{ mb: 3 }}
               required
             />
@@ -126,8 +143,8 @@ const ClientForm = ({
               fullWidth
               label="Company Name"
               name="company_name"
-              value={formData.company_name || ''}
-              onChange={onChange}
+              value={localFormData.company_name || ''}
+              onChange={handleChange}
               sx={{ mb: 3 }}
               required
             />
@@ -136,8 +153,8 @@ const ClientForm = ({
               fullWidth
               label="Address"
               name="client_address"
-              value={formData.client_address || ''}
-              onChange={onChange}
+              value={localFormData.client_address || ''}
+              onChange={handleChange}
               multiline
               rows={3}
               sx={{ mb: 3 }}
@@ -148,8 +165,8 @@ const ClientForm = ({
               <InputLabel>Status</InputLabel>
               <Select
                 name="client_status"
-                value={formData.client_status || ''}
-                onChange={onChange}
+                value={localFormData.client_status || ''}
+                onChange={handleChange}
                 label="Status"
                 required
               >

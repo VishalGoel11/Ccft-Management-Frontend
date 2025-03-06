@@ -12,11 +12,6 @@ import {
   Paper,
   Modal,
   IconButton,
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
   Snackbar,
   FormControl,
   InputLabel,
@@ -31,6 +26,7 @@ import Sidebar from "./sidebar";
 import TestForm from "./testform";
 import VendorForm from "./VendorForm";
 import ClientForm from "./ClientForm";
+import Swal from "sweetalert2";
 
 const Pendingpr = () => {
   const [projects, setProjects] = useState([]);
@@ -41,8 +37,6 @@ const Pendingpr = () => {
   const [isTestFormOpen, setIsTestFormOpen] = useState(false);
   const [isVendorFormOpen, setIsVendorFormOpen] = useState(false);
   const [isClientFormOpen, setIsClientFormOpen] = useState(false);
-  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
-  const [deleteProjectId, setDeleteProjectId] = useState(null);
   const [formData, setFormData] = useState({
     s_id: "",
     s_name: "",
@@ -110,24 +104,26 @@ const Pendingpr = () => {
   };
 
   const handleConfirmDeleteOpen = (projectId) => {
-    setConfirmDeleteOpen(true);
-    setDeleteProjectId(projectId);
-  };
-
-  const handleConfirmDeleteClose = () => {
-    setConfirmDeleteOpen(false);
-    setDeleteProjectId(null);
-  };
-
-  const handleDelete = () => {
-    const updatedProjects = projects.filter(
-      (project) => project.s_id !== deleteProjectId
-    );
-    setProjects(updatedProjects);
-    setConfirmDeleteOpen(false);
-    setDeleteProjectId(null);
-    setSnackbarOpen(true);
-    setSnackbarMessage("Project deleted successfully.");
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setProjects(projects.filter(project => project.s_id !== projectId));
+        Swal.fire({
+          title: "Deleted!",
+          text: "The project has been deleted.",
+          icon: "success"
+        });
+        setSnackbarOpen(true);
+        setSnackbarMessage("Project deleted successfully.");
+      }
+    });
   };
 
   const handleEdit = (project) => {
@@ -141,14 +137,12 @@ const Pendingpr = () => {
 
   const handleSubmit = (data) => {
     if (data.s_id) {
-      // Edit existing project
       const updatedProjects = projects.map((project) =>
         project.s_id === data.s_id ? data : project
       );
       setProjects(updatedProjects);
       setSnackbarMessage("Project updated successfully.");
     } else {
-      // Add new project
       setProjects([...projects, { ...data, s_id: Date.now().toString() }]);
       setSnackbarMessage("New project added successfully.");
     }
@@ -218,7 +212,7 @@ const Pendingpr = () => {
           </Button>
         </Box>
         <TableContainer component={Paper} sx={{ mt: 3 }}>
-          <Table sx={{ minWidth: 650 }}>
+          <Table sx={{ minWidth: 650, fontSize: '0.75rem' }}>
             <TableHead sx={{ backgroundColor: "#eeeeee" }}>
               <TableRow>
                 <TableCell>S.No</TableCell>
@@ -237,7 +231,9 @@ const Pendingpr = () => {
               {projects.map((project, index) => (
                 <TableRow key={project.s_id}>
                   <TableCell>{index + 1}</TableCell>
-                  <TableCell>{project.s_id}</TableCell>
+                  <TableCell>
+                    {project.s_id.length > 10 ? `${project.s_id.substring(0, 10)}...` : project.s_id}
+                  </TableCell>
                   <TableCell>{project.s_name}</TableCell>
                   <TableCell>{project.t_id || "N/A"}</TableCell>
                   <TableCell>{project.v_id || "N/A"}</TableCell>
@@ -285,17 +281,29 @@ const Pendingpr = () => {
           justifyContent: 'center',
         }}
       >
-        <Box sx={{ width: '100%', maxWidth: 600, mx: 2, bgcolor: 'background.paper', boxShadow: 24, p: 4, borderRadius: 2 }}>
-          <Typography variant="h6" sx={{ mb: 2 }}>Add New Project</Typography>
+        <Box sx={{ width: '100%', maxWidth: 600, mx: 2, bgcolor: 'background.paper', boxShadow: 24, p: 2, borderRadius: 2, maxHeight: '80vh', overflowY: 'auto' }}>
+          <Box
+            sx={{
+              backgroundColor: "#3f51b5",
+              color: "white",
+              p: 2,
+              borderRadius: 1,
+              mb: 2,
+            }}
+          >
+            <Typography variant="h6">
+              {formData.s_id ? "Edit Project" : "Add New Project"}
+            </Typography>
+          </Box>
           <TextField 
             fullWidth 
             label="Sample Name" 
             name="s_name" 
             value={formData.s_name} 
             onChange={handleChange} 
-            sx={{ mb: 2 }} 
+            sx={{ mb: 1 }} 
           />
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
             <FormControl fullWidth>
               <InputLabel>Test ID</InputLabel>
               <Select
@@ -326,7 +334,7 @@ const Pendingpr = () => {
               <AddIcon />
             </IconButton>
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
             <FormControl fullWidth>
               <InputLabel>Vendor ID</InputLabel>
               <Select
@@ -357,7 +365,7 @@ const Pendingpr = () => {
               <AddIcon />
             </IconButton>
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
             <FormControl fullWidth>
               <InputLabel>Client ID</InputLabel>
               <Select
@@ -394,7 +402,7 @@ const Pendingpr = () => {
             name="s_date_received" 
             value={formData.s_date_received} 
             onChange={handleChange} 
-            sx={{ mb: 2 }} 
+            sx={{ mb: 1 }} 
           />
           <TextField 
             fullWidth 
@@ -402,7 +410,7 @@ const Pendingpr = () => {
             name="s_report" 
             value={formData.s_report} 
             onChange={handleChange} 
-            sx={{ mb: 2 }} 
+            sx={{ mb: 1 }} 
           />
           <TextField 
             fullWidth 
@@ -410,7 +418,7 @@ const Pendingpr = () => {
             name="s_raw_data" 
             value={formData.s_raw_data} 
             onChange={handleChange} 
-            sx={{ mb: 2 }} 
+            sx={{ mb: 1 }} 
           />
           <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
             <Button variant="contained" color="primary" onClick={() => handleSubmit(formData)}>Submit</Button>
@@ -418,28 +426,6 @@ const Pendingpr = () => {
           </Box>
         </Box>
       </Modal>
-
-      <Dialog
-        open={confirmDeleteOpen}
-        onClose={handleConfirmDeleteClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">Confirm Delete</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete {projects.find(project => project.s_id === deleteProjectId)?.s_name || 'this project'}?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleConfirmDeleteClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleDelete} color="primary" autoFocus>
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
 
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
@@ -464,7 +450,7 @@ const Pendingpr = () => {
           maxWidth: 600,
           bgcolor: 'background.paper',
           boxShadow: 24,
-          p: 0,
+          p: 2,
           borderRadius: '12px',
           outline: 'none',
         }}>
@@ -490,7 +476,7 @@ const Pendingpr = () => {
           maxWidth: 600,
           bgcolor: 'background.paper',
           boxShadow: 24,
-          p: 0,
+          p: 2,
           borderRadius: '12px',
           outline: 'none',
         }}>
@@ -516,7 +502,7 @@ const Pendingpr = () => {
           maxWidth: 600,
           bgcolor: 'background.paper',
           boxShadow: 24,
-          p: 0,
+          p: 2,
           borderRadius: '12px',
           outline: 'none',
         }}>

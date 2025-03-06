@@ -201,54 +201,49 @@ const CompletePr = () => {
 
         <TableContainer component={Paper} sx={{ mt: 3 }}>
           <Table>
-            <TableHead sx={{ backgroundColor: "#eeeeee" }}>
-              <TableRow>
-                <TableCell>S.No</TableCell>
-                <TableCell>ID</TableCell>
-                <TableCell>Sample Name</TableCell>
-                <TableCell>Test ID</TableCell>
-                <TableCell>Vendor ID</TableCell>
-                <TableCell>Client ID</TableCell>
-                <TableCell>Date Received</TableCell>
-                <TableCell>Report</TableCell>
-                <TableCell>Raw Data</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {projects.map((project, index) => (
-                <TableRow key={project.s_id}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{project.s_id}</TableCell>
-                  <TableCell>{project.s_name}</TableCell>
-                  <TableCell>{project.t_id || "N/A"}</TableCell>
-                  <TableCell>{project.v_id || "N/A"}</TableCell>
-                  <TableCell>{project.c_id || "N/A"}</TableCell>
-                  <TableCell>{project.s_date_received}</TableCell>
-                  <TableCell>
-                    <a href={`/${project.s_report}`} target="_blank" rel="noopener noreferrer">
-                      {project.s_report}
-                    </a>
-                  </TableCell>
-                  <TableCell>{project.s_raw_data}</TableCell>
-                  <TableCell>
-                    <a href={`/${project.s_report}`} target="_blank" rel="noopener noreferrer">
-                      {project.s_report}
-                    </a>
-                  </TableCell>
-                  <TableCell>{project.s_raw_data}</TableCell>
-                  <TableCell sx={{ textTransform: 'capitalize' }}>{project.t_status}</TableCell>
-                  <TableCell>
-                    <Box sx={{ display: 'flex', gap: 1 }}>
-                    
-                      <DeleteIcon 
-                        sx={{ cursor: 'pointer', color: '#f44336' }} 
-                        onClick={() => handleDelete(project.s_id)}
-                      />
-                    </Box>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+          <TableHead sx={{ backgroundColor: "#eeeeee" }}>
+  <TableRow>
+    <TableCell>S.No</TableCell>
+    <TableCell>ID</TableCell>
+    <TableCell>Sample Name</TableCell>
+    <TableCell>Test ID</TableCell>
+    <TableCell>Vendor ID</TableCell>
+    <TableCell>Client ID</TableCell>
+    <TableCell>Date Received</TableCell>
+    <TableCell>Report</TableCell>
+    <TableCell>Raw Data</TableCell>
+    <TableCell>Status</TableCell>
+    <TableCell>Actions</TableCell>
+  </TableRow>
+</TableHead>
+          <TableBody>
+  {projects.map((project, index) => (
+    <TableRow key={project.s_id}>
+      <TableCell>{index + 1}</TableCell>
+      <TableCell>{project.s_id}</TableCell>
+      <TableCell>{project.s_name}</TableCell>
+      <TableCell>{project.t_id || "N/A"}</TableCell>
+      <TableCell>{project.v_id || "N/A"}</TableCell>
+      <TableCell>{project.c_id || "N/A"}</TableCell>
+      <TableCell>{project.s_date_received}</TableCell>
+      <TableCell>
+        <a href={`/${project.s_report}`} target="_blank" rel="noopener noreferrer">
+          {project.s_report}
+        </a>
+      </TableCell>
+      <TableCell>{project.s_raw_data}</TableCell>
+      <TableCell sx={{ textTransform: 'capitalize' }}>{project.t_status}</TableCell>
+      <TableCell>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <DeleteIcon 
+            sx={{ cursor: 'pointer', color: '#f44336' }} 
+            onClick={() => handleDelete(project.s_id)}
+          />
+        </Box>
+      </TableCell>
+    </TableRow>
+  ))}
+</TableBody>
           </Table>
         </TableContainer>
       </Box>

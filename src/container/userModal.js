@@ -1,139 +1,109 @@
 import React, { useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  TextField,
-  Button,
-  MenuItem,
-  DialogActions,
-} from "@mui/material";
+import { Modal, Box, TextField, Button, Typography } from "@mui/material";
 
-const UserModal = ({ open, onClose, onSubmit, editUser }) => {
-  const [userData, setUserData] = useState({
-    id: "", // Added ID field
-    name: "",
+const UserModal = ({ open, handleClose, user, handleUserSubmit }) => {
+  const [formData, setFormData] = useState({
+    id: "",
     email: "",
-    role: "User",
-    status: "Active",
-    password: "",
+    role: "",
   });
 
   useEffect(() => {
-    if (editUser) {
-      // If editing, use the existing user data
-      setUserData(editUser);
+    if (user) {
+      setFormData(user);
     } else {
-      // If adding, generate a new random ID (simulating backend behavior)
-      setUserData({
-        id: Math.floor(Math.random() * 900) + 100, // Simulated ID
-        name: "",
+      setFormData({
+        id: "",
         email: "",
-        role: "User",
-        status: "Active",
-        password: "",
+        role: "",
       });
     }
-  }, [editUser]);
+  }, [user]);
 
   const handleChange = (e) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = () => {
-    onSubmit(userData);
-    onClose();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleUserSubmit(formData);
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle style={{ background: "#3f51b5", color: "#fff" }}>
-        {editUser ? "Edit User" : "Create New User"}
-      </DialogTitle>
-      <DialogContent>
-        {/* ID Field - Read-only */}
-        <TextField
-          label="User ID"
-          name="id"
-          fullWidth
-          margin="dense"
-          variant="outlined"
-          value={userData.id}
-          InputProps={{ readOnly: true }}
-        />
-
-        <TextField
-          label="Full Name *"
-          name="name"
-          fullWidth
-          margin="dense"
-          variant="outlined"
-          value={userData.name}
-          onChange={handleChange}
-        />
-
-        <TextField
-          label="Email *"
-          name="email"
-          type="email"
-          fullWidth
-          margin="dense"
-          variant="outlined"
-          value={userData.email}
-          onChange={handleChange}
-        />
-
-        <TextField
-          select
-          label="Role *"
-          name="role"
-          fullWidth
-          margin="dense"
-          variant="outlined"
-          value={userData.role}
-          onChange={handleChange}
+    <Modal open={open} onClose={handleClose}>
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: 400,
+          bgcolor: "background.paper",
+          boxShadow: 24,
+          p: 4,
+          borderRadius: 1,
+        }}
+      >
+        <Box
+          sx={{
+            bgcolor: '#3f51b5',
+            color: 'white',
+            p: 2,
+            borderTopLeftRadius: '12px',
+            borderTopRightRadius: '12px',
+            mb: 2,
+          }}
         >
-          <MenuItem value="Admin">Admin</MenuItem>
-          <MenuItem value="User">User</MenuItem>
-        </TextField>
-
-        <TextField
-          select
-          label="Status *"
-          name="status"
-          fullWidth
-          margin="dense"
-          variant="outlined"
-          value={userData.status}
-          onChange={handleChange}
-        >
-          <MenuItem value="Active">Active</MenuItem>
-          <MenuItem value="Inactive">Inactive</MenuItem>
-          <MenuItem value="Pending">Pending</MenuItem>
-        </TextField>
-
-        {!editUser && (
+          <Typography variant="h6">
+            {user ? 'Edit User' : 'Add User'}
+          </Typography>
+        </Box>
+        <form onSubmit={handleSubmit}>
+          {formData.id && (
+            <TextField
+              fullWidth
+              label="User ID"
+              name="id"
+              value={formData.id}
+              InputProps={{
+                readOnly: true,
+              }}
+              sx={{ mb: 2 }}
+            />
+          )}
           <TextField
-            label="Password *"
-            name="password"
-            type="password"
             fullWidth
-            margin="dense"
-            variant="outlined"
-            value={userData.password}
+            label="Email"
+            name="email"
+            value={formData.email}
             onChange={handleChange}
+            sx={{ mb: 2 }}
+            required
           />
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} variant="outlined">
-          CANCEL
-        </Button>
-        <Button onClick={handleSubmit} variant="contained" color="primary">
-          {editUser ? "UPDATE" : "CREATE"}
-        </Button>
-      </DialogActions>
-    </Dialog>
+          <TextField
+            fullWidth
+            label="Role"
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+            sx={{ mb: 2 }}
+            required
+          />
+          <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
+            <Button variant="outlined" onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button type="submit" variant="contained" color="primary">
+              {user ? "Update" : "Create"}
+            </Button>
+          </Box>
+        </form>
+      </Box>
+    </Modal>
   );
 };
 
