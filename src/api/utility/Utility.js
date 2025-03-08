@@ -22,7 +22,8 @@ export async function handleHttpRequest(requestType, endpoint, payload = {}, isT
     }
 
     const config = { headers };
-
+    console.log(`${API_BASE_URL}${endpoint}`);
+    console.log(payload);
     let response;
     switch (requestType.toUpperCase()) {
       case "GET":
