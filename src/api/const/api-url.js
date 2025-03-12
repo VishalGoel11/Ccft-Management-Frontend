@@ -3,7 +3,7 @@ export const API_BASE_URL = "https://goelvishal.com"
 export const addClient = "/client/add-client";
 export const addTest = "/test/add-test";
 export const addVendor = "/vendor/add-vendor";
-export const addSample = "/sample/add-sample";
+export const addSample = "/sample/add-sample-handle";
 export const loginUser = "/admin/login-user";
 export const addUser = "/user/add-user";
 

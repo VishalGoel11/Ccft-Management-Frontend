@@ -12,6 +12,8 @@ import {
   Paper,
   Modal,
   IconButton,
+  Tooltip,
+  styled,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -21,7 +23,15 @@ import Sidebar from "./sidebar";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { addVendor, deleteVendor, getAllVendor, updateVendor } from "../api/const/api-url";
-import { getLocalStorage, handleHttpRequest } from "../api/utility/Utility";
+import { getLocalStorage, handleHttpRequest, handleRefresh } from "../api/utility/Utility";
+import { Style } from "@mui/icons-material";
+import RefreshIcon from '@mui/icons-material/Refresh';
+
+const StyledRefreshIcon = styled(RefreshIcon)({
+  fontSize: '40px',
+  color: 'white',
+  cursor: 'pointer',
+});
 
 const Vendor = () => {
   const [vendors, setVendors] = useState([]);
@@ -163,7 +173,14 @@ const Vendor = () => {
             borderRadius: 1,
           }}
         >
-          <Typography variant="h6">All Vendors</Typography>
+            <div style={{display:'flex', gap:'7px',alignItems:'center'}}>
+          <Tooltip title="Refresh">
+            <Button onClick={()=>{handleRefresh()}}>
+              <StyledRefreshIcon/>
+            </Button>
+          </Tooltip>
+          <Typography variant="h6" style={{fontSize:'30px'}}>All Vendor</Typography>
+          </div>
           <Button
             variant="contained"
             color="secondary"
@@ -190,7 +207,7 @@ const Vendor = () => {
                 <TableCell>Address</TableCell>
                 <TableCell>Phone</TableCell>
                 <TableCell>GST</TableCell>
-                <TableCell>Date Added</TableCell>
+                {/* <TableCell>Date Added</TableCell> */}
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -204,7 +221,7 @@ const Vendor = () => {
                   <TableCell>{vendor.v_add}</TableCell>
                   <TableCell>{vendor.phone}</TableCell>
                   <TableCell>{vendor.v_gst}</TableCell>
-                  <TableCell>{vendor.v_date_added}</TableCell>
+                  {/* <TableCell>{vendor.v_date_added!=null?vendor.v_date_added:"N/A"}</TableCell> */}
                   <TableCell>
                     <Box sx={{ display: "flex", gap: 1 }}>
                       <EditIcon

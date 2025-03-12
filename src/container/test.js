@@ -16,6 +16,8 @@ import {
   Select,
   MenuItem,
   IconButton,
+  styled,
+  Tooltip,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -24,9 +26,17 @@ import TestForm from "./testform";
 import VendorForm from "./VendorForm";
 import Sidebar from "./sidebar";
 import Swal from "sweetalert2";
-import { getLocalStorage, handleHttpRequest } from "../api/utility/Utility";
+import { getLocalStorage, handleHttpRequest, handleRefresh } from "../api/utility/Utility";
 import { addTest, deleteTest, getAllTest, getAllVendor, updateTest } from "../api/const/api-url";
 import { useNavigate } from "react-router-dom";
+import RefreshIcon from '@mui/icons-material/Refresh';
+
+const StyledRefreshIcon = styled(RefreshIcon)({
+  fontSize: '40px',
+  color: 'white',
+  cursor: 'pointer',
+});
+
 
 const Test = () => {
   let [tests, setTests] = useState([]);
@@ -38,44 +48,44 @@ const Test = () => {
   let navigate = useNavigate();
 
   useEffect(() => {
-    
+
     const fetchData = async () => {
-      try{
+      try {
         const token = getLocalStorage();
-        if(token === null){
+        if (token === null) {
           navigate("/")
         }
-        const response = await handleHttpRequest("GET",getAllTest, "", true,token);
-        if(response.status === 202){
-          setTests(tests=response.data);
+        const response = await handleHttpRequest("GET", getAllTest, "", true, token);
+        if (response.status === 202) {
+          setTests(tests = response.data);
           console.log(tests)
-        }else{
+        } else {
           console.log('------------Error----------');
         }
-      }catch(error){
+      } catch (error) {
         console.log(error);
       }
     };
     fetchData();
     const fetchDataClient = async () => {
-          try{
-            const token = getLocalStorage();
-            if(token === null){
-              navigate("/")
-            }
-            const response = await handleHttpRequest("GET",getAllVendor, "", true,token);
-            if(response.status === 202){
-              // console.log(response.data)
-              setVendors(response.data);
-              // console.log(vendors);
-            }else{
-              console.log('------------Error----------');
-            }
-          }catch(error){
-            console.log(error);
-          }
-        };
-        fetchDataClient();
+      try {
+        const token = getLocalStorage();
+        if (token === null) {
+          navigate("/")
+        }
+        const response = await handleHttpRequest("GET", getAllVendor, "", true, token);
+        if (response.status === 202) {
+          // console.log(response.data)
+          setVendors(response.data);
+          // console.log(vendors);
+        } else {
+          console.log('------------Error----------');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchDataClient();
   }, []);
 
   const handleOpen = (test = null) => {
@@ -91,35 +101,35 @@ const Test = () => {
 
   const handleSubmit = (data) => {
     if (editingTest) {
-      const updateEntity = async(data)=>{
-      const token = getLocalStorage();
-            if (token === null) {
-              navigate("/")
-            } else {
-              const response = await handleHttpRequest("PUT", updateTest, data, true, token);
-              if (response.status === 202) {
-                alert("Client Updated Succesfully.")
-              } else {
-                alert("Something went wrong. ")
-              }
-            }
-          }
-          updateEntity(data)
-    } else {
-      const addEntity = async(data) =>{
+      const updateEntity = async (data) => {
         const token = getLocalStorage();
-              if (token === null) {
-                navigate("/")
-              } else {
-                console.log(data);
-                const response = await handleHttpRequest("POST", addTest, data, true, token)
-                // const response = 202;
-                if (response.status === 202) {
-                  alert("Client added Successfully.")
-                } else {
-                  alert("Something went wrong.")
-                }
-              }
+        if (token === null) {
+          navigate("/")
+        } else {
+          const response = await handleHttpRequest("PUT", updateTest, data, true, token);
+          if (response.status === 202) {
+            alert("Client Updated Succesfully.")
+          } else {
+            alert("Something went wrong. ")
+          }
+        }
+      }
+      updateEntity(data)
+    } else {
+      const addEntity = async (data) => {
+        const token = getLocalStorage();
+        if (token === null) {
+          navigate("/")
+        } else {
+          console.log(data);
+          const response = await handleHttpRequest("POST", addTest, data, true, token)
+          // const response = 202;
+          if (response.status === 202) {
+            alert("Test added Successfully.")
+          } else {
+            alert("Something went wrong.")
+          }
+        }
       }
       addEntity(data);
     }
@@ -143,17 +153,17 @@ const Test = () => {
         //   'Your test has been deleted.',
         //   'success'
         // );
-        const deleteTests = async(id)=>{
+        const deleteTests = async (id) => {
           const token = getLocalStorage();
-          const response = await handleHttpRequest("DELETE",deleteTest,{id:id},true,token);
+          const response = await handleHttpRequest("DELETE", deleteTest, { id: id }, true, token);
           // console.log(response);
-          if(response.status===202){
+          if (response.status === 202) {
             alert("Test Deleted Successfully.")
-          }else{
+          } else {
             alert("Something wen wrong.")
           }
         }
-          deleteTests(id);
+        deleteTests(id);
       }
     });
   };
@@ -198,7 +208,14 @@ const Test = () => {
             borderRadius: 1,
           }}
         >
-          <Typography variant="h6">All Tests</Typography>
+           <div style={{display:'flex', gap:'7px',alignItems:'center'}}>
+          <Tooltip title="Refresh">
+            <Button onClick={()=>{handleRefresh()}}>
+              <StyledRefreshIcon/>
+            </Button>
+          </Tooltip>
+          <Typography variant="h6" style={{fontSize:'30px'}}>All Test</Typography>
+          </div>
           <Button
             variant="contained"
             color="secondary"
@@ -221,10 +238,10 @@ const Test = () => {
                 <TableCell>S.No</TableCell>
                 <TableCell>ID</TableCell>
                 <TableCell>Test Name</TableCell>
-                <TableCell>Status</TableCell>
+                {/* <TableCell>Status</TableCell> */}
                 <TableCell>Protocol</TableCell>
                 <TableCell>Update</TableCell>
-                <TableCell>Masked Report</TableCell>
+                {/* <TableCell>Masked Report</TableCell> */}
                 <TableCell>Vendor Name</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
@@ -235,7 +252,7 @@ const Test = () => {
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{test.t_id}</TableCell>
                   <TableCell>{test.t_name}</TableCell>
-                  <TableCell>{test.t_status}</TableCell>
+                  {/* <TableCell>{test.t_status}</TableCell> */}
                   <TableCell>{test.t_protocol}</TableCell>
                   <TableCell>{test.t_update}</TableCell>
                   {/* <TableCell>{test.t_masked_report}</TableCell> */}
@@ -299,7 +316,7 @@ const Test = () => {
           borderRadius: '12px',
           outline: 'none',
         }}>
-          <VendorForm 
+          <VendorForm
             onSubmit={handleVendorFormSubmit}
             onCancel={handleCloseVendorForm}
           />

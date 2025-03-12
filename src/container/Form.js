@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
@@ -16,6 +16,9 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import { getLocalStorage, handleHttpRequest } from '../api/utility/Utility';
+import { getAllClient, getAllTest } from '../api/const/api-url';
+import { useNavigate } from 'react-router-dom';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   maxWidth: 600, // Increased maxWidth to make the card wider
@@ -66,12 +69,8 @@ const TestForm = ({ onSubmit, onCancel }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ 
-      id: `test-${Date.now()}`, 
-      name: testData.testName, 
-      type: testData.testType,
-      description: testData.testDescription 
-    });
+    console.log()
+    onSubmit(testData);
   };
 
   return (
@@ -171,17 +170,48 @@ const TestForm = ({ onSubmit, onCancel }) => {
 const ProjectForm = ({ 
   formData, 
   onSubmit, 
-  onChange, 
+  // onChange, 
   onCancel,
   isEditMode = false,
-  testOptions = []
+  clients = [],
+  tests = []
 }) => {
   const [isTestFormOpen, setIsTestFormOpen] = useState(false);
+  // const [data,setData]  = useState(formData);
+  const [s_id,setSId]= useState(formData.s_id);
+  const [s_name,setSName]= useState(formData.s_name);
+  const [s_date_received,setSDateReceived]= useState(formData.s_date_received);
+  const [s_delivery_date,setSDeliveryDate]= useState(formData.s_delivery_date);
+  const [s_raw_data,setSRawdata]= useState(formData.s_raw_data);
+  const [s_report,setSReport]= useState(formData.s_report);
+  const [t_status,setTStatus]= useState(formData.t_status);
+  const [c_name,setCName]= useState(formData.c_name);
+  const [t_name,setTName]= useState(formData.t_name);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    // console.log("Data -> ",data);
+    const payload = new FormData();
+    payload.append("s_id", s_id);
+    payload.append("c_name", c_name);
+    payload.append("s_name", s_name);
+    payload.append("s_date_received", s_date_received);
+    payload.append("s_report", s_report); // Appending file directly
+    payload.append("s_raw_data", s_raw_data);
+    payload.append("t_name", t_name);
+    payload.append("t_status", t_status);
+    payload.append("s_delivery_date", s_delivery_date);
+    console.log("Payload -> ",payload);
+    // for (let pair of payload.entries()) {
+    //   console.log(pair[0] + ": " + pair[1]);
+    // }
+    onSubmit(payload);
   };
+  
+  // const onChange = (e)=>{
+  //     setData({...data,[e.target.name]:e.target.value})
+  //     // console.log(data);
+  // }
 
   const handleOpenTestForm = () => {
     setIsTestFormOpen(true);
@@ -191,8 +221,9 @@ const ProjectForm = ({
     setIsTestFormOpen(false);
   };
 
+
   const handleTestFormSubmit = (newTest) => {
-    console.log('New test created:', newTest);
+    // console.log('New test created:', newTest);
     setIsTestFormOpen(false);
   };
 
@@ -217,8 +248,8 @@ const ProjectForm = ({
               <StyledTextField
                 fullWidth
                 label="Project ID"
-                name="id"
-                value={formData.id || 'Will be generated automatically'}
+                name="s_id"
+                value={s_id || 'Will be generated automatically'}
                 InputProps={{
                   readOnly: true,
                 }}
@@ -236,26 +267,61 @@ const ProjectForm = ({
               fullWidth
               label="Sample Name"
               name="s_name"
-              value={formData.s_name}
-              onChange={onChange}
+              value={s_name}
+              onChange={(e)=>setSName(e.target.value)}
               sx={{ mb: 2 }} // Adjusted margin to make the field smaller
               required
             />
-
+            
             <TestSelectWithAddBtn sx={{ mb: 2 }}> {/* Adjusted margin to make the box smaller */}
               <FormControl fullWidth>
-                <InputLabel sx={{ fontSize: '0.875rem' }}>Test ID</InputLabel>
+                <InputLabel sx={{ fontSize: '0.875rem' }}>Test Name</InputLabel>
                 <Select
-                  name="t_id"
-                  value={formData.t_id}
-                  onChange={onChange}
+                  name="t_name"
+                  value={t_name}
+                  onChange={(e)=>setTName(e.target.value)}
                   label="Test ID"
                   required
                   sx={{ fontSize: '0.875rem', height: '40px' }} // Decreased font size and height
                 >
-                  {testOptions.map((test) => (
-                    <MenuItem key={test.id} value={test.id}>
-                      {test.name || test.id}
+                  {tests!=null?tests.map((test) => (
+                    <MenuItem key={test.t_name} value={test.t_name}>
+                      {test.t_name || test.t_id}
+                    </MenuItem>
+                  )):<MenuItem >
+                </MenuItem>}
+                </Select>
+              </FormControl>
+              <IconButton 
+                color="primary" 
+                onClick={handleOpenTestForm}
+                sx={{ 
+                  bgcolor: '#3f51b5', 
+                  color: 'white',
+                  '&:hover': {
+                    bgcolor: '#303f9f',
+                  },
+                  mt: 1
+                }}
+              >
+                <AddIcon />
+              </IconButton>
+            </TestSelectWithAddBtn>
+
+            <TestSelectWithAddBtn sx={{ mb: 2 }}> {/* Adjusted margin to make the box smaller */}
+              <FormControl fullWidth>
+                <InputLabel sx={{ fontSize: '0.875rem' }}>Client Name</InputLabel>
+                <Select
+                  name="c_name"
+                  value={c_name}
+                  onChange={(e)=>setCName(e.target.value)}
+                  label="Client ID"
+                  required
+                  sx={{ fontSize: '0.875rem', height: '40px' }} // Decreased font size and height
+                >
+                  {clients.map((test) => (
+                    <MenuItem key={test.c_name} value={test.c_name}>
+                      {test.c_name || test.c_id}
                     </MenuItem>
                   ))}
                 </Select>
@@ -281,8 +347,8 @@ const ProjectForm = ({
               label="Entry Date"
               name="s_entry_date"
               type="date"
-              value={formData.s_entry_date}
-              onChange={onChange}
+              value={s_date_received}
+              onChange={(e)=>setSDateReceived(e.target.value)}
               InputLabelProps={{ shrink: true }}
               sx={{ mb: 2 }} // Adjusted margin to make the field smaller
               required
@@ -293,8 +359,8 @@ const ProjectForm = ({
               label="Delivery Date"
               name="s_delivery_date"
               type="date"
-              value={formData.s_delivery_date}
-              onChange={onChange}
+              value={s_delivery_date}
+              onChange={(e)=>setSDeliveryDate(e.target.value)}
               InputLabelProps={{ shrink: true }}
               sx={{ mb: 2 }} // Adjusted margin to make the field smaller
               required
@@ -305,8 +371,8 @@ const ProjectForm = ({
                 fullWidth
                 label="Report"
                 name="s_report"
-                value={formData.s_report}
-                onChange={onChange}
+                value={s_report}
+                onChange={(e)=>setSReport(e.target.value)}
                 sx={{ mr: 2 }} // Adjusted margin to make the field smaller
                 required
               />
@@ -325,15 +391,11 @@ const ProjectForm = ({
                 <input
                   type="file"
                   hidden
+                  // value={}
                   onChange={(e) => {
                     const file = e.target.files[0];
                     if (file) {
-                      onChange({
-                        target: {
-                          name: 's_report',
-                          value: file.name,
-                        },
-                      });
+                      setSReport(file);
                     }
                   }}
                 />
@@ -344,8 +406,8 @@ const ProjectForm = ({
               fullWidth
               label="Raw Data"
               name="s_raw_data"
-              value={formData.s_raw_data}
-              onChange={onChange}
+              value={s_raw_data}
+              onChange={(e)=>setSRawdata(e.target.value)}
               multiline
               rows={0}
               InputLabelProps={{ shrink: true }} // Ensure the label shrinks
@@ -357,8 +419,8 @@ const ProjectForm = ({
               <InputLabel sx={{ fontSize: '0.875rem' }}>Status</InputLabel>
               <Select
                 name="t_status"
-                value={formData.t_status}
-                onChange={onChange}
+                value={t_status}
+                onChange={(e)=>setTStatus(e.target.value)}
                 label="Status"
                 required
                 sx={{ fontSize: '0.875rem', height: '40px' }} // Decreased font size and height

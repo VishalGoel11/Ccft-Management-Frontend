@@ -12,6 +12,8 @@ import {
   Paper,
   Modal,
   IconButton,
+  Tooltip,
+  styled,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -19,8 +21,16 @@ import ClientForm from "./ClientForm";
 import Sidebar from "./sidebar";
 import Swal from "sweetalert2";
 import { addClient, deleteClient, getAllClient, updateClient } from "../api/const/api-url";
-import { getLocalStorage, handleHttpRequest } from "../api/utility/Utility";
+import { getLocalStorage, handleHttpRequest, handleRefresh } from "../api/utility/Utility";
 import { useNavigate } from "react-router-dom";
+import RefreshIcon from '@mui/icons-material/Refresh';
+
+const StyledRefreshIcon = styled(RefreshIcon)({
+  fontSize: '40px',
+  color: 'white',
+  cursor: 'pointer',
+});
+
 
 const Client = () => {
   const [clients, setClients] = useState([]);
@@ -163,7 +173,14 @@ const Client = () => {
             borderRadius: 1,
           }}
         >
-          <Typography variant="h6">All Clients</Typography>
+           <div style={{display:'flex', gap:'7px',alignItems:'center'}}>
+          <Tooltip title="Refresh">
+            <Button onClick={()=>{handleRefresh()}}>
+              <StyledRefreshIcon/>
+            </Button>
+          </Tooltip>
+          <Typography variant="h6" style={{fontSize:'30px'}}>All Clients</Typography>
+          </div>
           <Button
             variant="contained"
             color="secondary"

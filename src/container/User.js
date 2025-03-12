@@ -11,6 +11,8 @@ import {
   Button,
   Typography,
   Modal,
+  styled,
+  Tooltip,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -19,12 +21,17 @@ import Swal from "sweetalert2";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "./sidebar";
-import { getLocalStorage, handleHttpRequest } from "../api/utility/Utility";
+import { getLocalStorage, handleHttpRequest, handleRefresh } from "../api/utility/Utility";
 import { useNavigate } from "react-router-dom";
 import { addUser, deleteUser, getAllUser, updateUser } from "../api/const/api-url";
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { flushSync } from "react-dom";
 
-
-
+const StyledRefreshIcon = styled(RefreshIcon)({
+  fontSize: '40px',
+  color: 'white',
+  cursor: 'pointer',
+});
 const User = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -167,7 +174,14 @@ const User = () => {
             borderRadius: 1,
           }}
         >
-          <Typography variant="h6">User Management</Typography>
+          <div style={{display:'flex', gap:'7px',alignItems:'center'}}>
+          <Tooltip title="Refresh">
+            <Button onClick={()=>{handleRefresh()}}>
+              <StyledRefreshIcon/>
+            </Button>
+          </Tooltip>
+          <Typography variant="h6" style={{fontSize:'30px'}}>User Management</Typography>
+          </div>
           <Button
             variant="contained"
             color="secondary"

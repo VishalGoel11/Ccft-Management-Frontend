@@ -11,6 +11,8 @@ import {
   TableRow,
   Paper,
   Modal,
+  Tooltip,
+  styled,
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -19,16 +21,31 @@ import Sidebar from "./sidebar";
 import Swal from "sweetalert2";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+import { getLocalStorage, handleHttpRequest, handleRefresh } from "../api/utility/Utility";
+import { addSample, deleteSample, getAllClient, getAllSample, getAllTest } from "../api/const/api-url";
+
+import RefreshIcon from '@mui/icons-material/Refresh';
+
+const StyledRefreshIcon = styled(RefreshIcon)({
+  fontSize: '40px',
+  color: 'white',
+  cursor: 'pointer',
+});
 
 const AllProjectsPage = () => {
   const [projects, setProjects] = useState([]);
   const [open, setOpen] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
+  let [clients, setClients] = useState(null);
+  let [tests, setTests] = useState(null);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     id: "",
     s_name: "",
     t_id: "",
-    s_entry_date: "",
+    c_id:"",
+    s_date_received: "",
     s_delivery_date: "",
     s_report: "",
     s_raw_data: "",
@@ -37,50 +54,66 @@ const AllProjectsPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = [
-        {
-          id: "P001",
-          s_id: "609ff9c1-69ba-499d-81e2-833e4b99d4d1",
-          s_name: "ABC Sample",
-          t_id: "T001",
-          s_entry_date: "2023-01-01",
-          s_delivery_date: "2023-01-10",
-          s_report: "Report_01.pdf",
-          s_raw_data: "This report contains data of the test of ABC client's sample s1",
-          t_status: "completed"
-        },
-        {
-          id: "P002",
-          s_id: "709ff9c1-69ba-499d-81e2-833e4b99d4d2",
-          s_name: "XYZ Sample",
-          t_id: "T002",
-          s_entry_date: "2023-02-01",
-          s_delivery_date: "2023-02-10",
-          s_report: "Report_02.pdf",
-          s_raw_data: "XYZ client sample data",
-          t_status: "pending"
-        },
-        {
-          id: "P003",
-          s_id: "809ff9c1-69ba-499d-81e2-833e4b99d4d3",
-          s_name: "New Sample",
-          t_id: "T003",
-          s_entry_date: "2023-03-01",
-          s_delivery_date: "2023-03-10",
-          s_report: "Report_03.pdf",
-          s_raw_data: "New sample test data",
-          t_status: "new"
-        }
-      ];
-      setProjects(response);
-    };
-    fetchData();
+     const token = getLocalStorage();
+          const fetchProject = async() => {
+             if(token !== null){
+                const response = await handleHttpRequest("GET",getAllSample,{},true,token);
+                setProjects(response.data);
+                // console.log(response.data);
+             }else{
+              navigate("/");
+             }
+          }
+          fetchProject();
+        // };
+    
+
+      const fetchTestData = async () => {
+          try {
+            const token = getLocalStorage();
+            if (token === null) {
+              navigate("/")
+            }
+            const response = await handleHttpRequest("GET", getAllTest, "", true, token);
+            if (response.status === 202) {
+              setTests(tests = response.data);
+              // console.log(tests)
+            } else {
+              console.log('------------Error----------');
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        };
+        fetchTestData();
+        // console.log(clients)
+        // console.log(tests)
+
+   const fetchClientData = async () => {
+         try {
+           const token = getLocalStorage();
+           if (token === null) {
+             navigate("/");
+           }
+           const response = await handleHttpRequest("GET", getAllClient, "", true, token);
+           if (response.status === 202) {
+            //  console.log(response.data)
+             setClients(response.data);
+             
+           } else {
+             console.log('------------Error----------');
+           }
+         } catch (error) {
+           console.log(error);
+         }
+       };
+       fetchClientData();
+   
   }, []);
 
   const getRowColor = (status) => {
     switch (status) {
-      case 'completed':
+      case 'C':
         return '#e8f5e9';
       case 'pending':
         return '#FFC0CB';
@@ -132,17 +165,27 @@ const AllProjectsPage = () => {
 
   const handleSubmit = (data) => {
     if (editingProject) {
-      setProjects(projects.map(p => 
-        p.s_id === editingProject.s_id ? { ...p, ...data } : p
-      ));
-      toast.success("Project updated successfully!");
+      alert("Under Devlopment.")
+      // setProjects(projects.map(p => 
+      //   p.s_id === editingProject.s_id ? { ...p, ...data } : p
+      // ));
+      // toast.success("Project updated successfully!");
     } else {
-      const newProject = { 
-        s_id: Date.now().toString(), 
-        ...data 
-      };
-      setProjects([...projects, newProject]);
-      toast.success("New project added successfully!");
+      const token = getLocalStorage();
+            if(token === null){
+              navigate('/')
+            }else{
+              console.log(data);
+              const addEntity= async(data) => {
+                const response = await handleHttpRequest("POST",addSample,data,true,token,true);
+                if(response.status===202){
+                  alert("Project added successfully!");
+                }else{
+                  alert("Something went worong");
+                }
+              }
+              addEntity(data);
+            }
     }
     handleClose();
   };
@@ -158,13 +201,24 @@ const AllProjectsPage = () => {
       confirmButtonText: "Yes, delete it!"
     }).then((result) => {
       if (result.isConfirmed) {
-        setProjects(projects.filter(project => project.s_id !== s_id));
-        Swal.fire({
-          title: "Deleted!",
-          text: "The project has been deleted.",
-          icon: "success"
-        });
-        toast.info("Project deleted successfully!");
+         const deleteEntity = async(id) => {
+                    const token = getLocalStorage();
+                    if(token!=null){
+                      const response = await handleHttpRequest("DELETE",deleteSample,{"id":id},true,token);
+                      if(response.status===202){
+                        alert("Sample Deleted Succesfully.")
+                      }else{
+                        alert("Something went wrong.")
+                      }
+                    }
+                }
+                deleteEntity(s_id);
+        //         Swal.fire({
+        //   title: "Deleted!",
+        //   text: "The project has been deleted.",
+        //   icon: "success"
+        // });
+        // toast.info("Project deleted successfully!");
       }
     });
   };
@@ -194,7 +248,14 @@ const AllProjectsPage = () => {
             borderRadius: 1,
           }}
         >
-          <Typography variant="h6">All Projects</Typography>
+          <div style={{display:'flex', gap:'7px',alignItems:'center'}}>
+          <Tooltip title="Refresh">
+            <Button onClick={()=>{handleRefresh()}}>
+              <StyledRefreshIcon/>
+            </Button>
+          </Tooltip>
+          <Typography variant="h6" style={{fontSize:'30px'}}>All Sample</Typography>
+          </div>
           <Button 
             variant="contained" 
             color="secondary" 
@@ -217,7 +278,8 @@ const AllProjectsPage = () => {
                 <TableCell>S.No</TableCell>
                 <TableCell>ID</TableCell>
                 <TableCell>Sample Name</TableCell>
-                <TableCell>Test ID</TableCell>
+                <TableCell>Test Name</TableCell>
+                <TableCell>Client Name</TableCell>
                 <TableCell>Entry Date</TableCell>
                 <TableCell>Delivery Date</TableCell>
                 <TableCell>Report</TableCell>
@@ -238,11 +300,12 @@ const AllProjectsPage = () => {
                   }}
                 >
                   <TableCell>{index + 1}</TableCell>
-                  <TableCell>{project.id}</TableCell>
+                  <TableCell>{project.s_id}</TableCell>
                   <TableCell>{project.s_name}</TableCell>
-                  <TableCell>{project.t_id || "N/A"}</TableCell>
-                  <TableCell>{project.s_entry_date}</TableCell>
-                  <TableCell>{project.s_delivery_date}</TableCell>
+                  <TableCell>{project.test!=null?project.test.t_name : "N/A"}</TableCell>
+                  <TableCell>{project.client!=null?project.client.c_name : "N/A"}</TableCell>
+                  <TableCell>{project.s_date_received}</TableCell>
+                  <TableCell>{project.s_delivery_date!==null?project.s_delivery_date:"N/A"}</TableCell>
                   <TableCell>
                     <a href={`/${project.s_report}`} target="_blank" rel="noopener noreferrer">
                       {project.s_report}
@@ -284,6 +347,8 @@ const AllProjectsPage = () => {
             onSubmit={handleSubmit}
             onCancel={handleClose}
             isEditMode={!!editingProject}
+            clients={clients}
+            tests={tests}
           />
         </Box>
       </Modal>

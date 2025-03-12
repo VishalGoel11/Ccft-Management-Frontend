@@ -11,19 +11,29 @@ export function getLocalStorage(){
     return token;
 }
 
-export async function handleHttpRequest(requestType, endpoint, payload = {}, isToken = false, token = "") {
+export async function handleHttpRequest(requestType, endpoint, payload = {}, isToken = false, token = "", isFile = false) {
   try {
-    let headers = {
-      "Content-Type": "application/json",
-    };
+    let headers = {}
+    if(isFile){
+      headers = {
+      "Content-Type": "multipart/form-data",
+      };
+    }else{
+      headers = {
+        "Content-Type": "application/json",
+        };
+    }
 
     if (isToken) {
       headers["Authorization"] = `Bearer ${token}`;
     }
 
     const config = { headers };
-    console.log(`${endpoint}`);
-    console.log(payload);
+    // for (let pair of payload.entries()) {
+    //   console.log(pair[0] + ": " + pair[1]);
+    // }
+    // console.log(`${endpoint}`);
+    
     let response;
     switch (requestType.toUpperCase()) {
       case "GET":
@@ -51,3 +61,9 @@ export async function handleHttpRequest(requestType, endpoint, payload = {}, isT
     throw error; 
   }
 }
+
+ export const handleRefresh = () => {
+    // Refresh the page (reload the browser)
+    window.location.reload();
+    
+  }
