@@ -292,7 +292,7 @@ const ProjectForm = ({
                 </MenuItem>}
                 </Select>
               </FormControl>
-              <IconButton 
+              {/* <IconButton 
                 color="primary" 
                 onClick={handleOpenTestForm}
                 sx={{ 
@@ -305,7 +305,7 @@ const ProjectForm = ({
                 }}
               >
                 <AddIcon />
-              </IconButton>
+              </IconButton> */}
             </TestSelectWithAddBtn>
 
             <TestSelectWithAddBtn sx={{ mb: 2 }}> {/* Adjusted margin to make the box smaller */}
@@ -326,7 +326,7 @@ const ProjectForm = ({
                   ))}
                 </Select>
               </FormControl>
-              <IconButton 
+              {/* <IconButton 
                 color="primary" 
                 onClick={handleOpenTestForm}
                 sx={{ 
@@ -339,7 +339,7 @@ const ProjectForm = ({
                 }}
               >
                 <AddIcon />
-              </IconButton>
+              </IconButton> */}
             </TestSelectWithAddBtn>
 
             <StyledTextField
