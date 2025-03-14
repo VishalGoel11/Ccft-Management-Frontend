@@ -334,7 +334,7 @@ const AllProjectsPage = () => {
                     </a>
                   </TableCell>
                   <TableCell>{project.s_raw_data}</TableCell>
-                  <TableCell sx={{ textTransform: 'capitalize' }}>{project.t_status}</TableCell>
+                    <TableCell sx={{ textTransform: 'capitalize' }}>{project.t_status!=null?project.t_status:"N/A"}</TableCell>
                   <TableCell>
                     <Box sx={{ display: 'flex', gap: 1 }}>
                       <EditIcon 

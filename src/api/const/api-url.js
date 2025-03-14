@@ -1,4 +1,4 @@
-export const API_BASE_URL = "https://goelvishal.com"
+export const API_BASE_URL = "http://localhost:8083"
 
 export const addClient = "/client/add-client";
 export const addTest = "/test/add-test";
