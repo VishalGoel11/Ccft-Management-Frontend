@@ -315,10 +315,10 @@ const AllProjectsPage = () => {
                   <TableCell sx={{ textTransform: 'capitalize' }}>{project.t_status!=null?project.t_status:"N/A"}</TableCell>
                   <TableCell>
                     <Box sx={{ display: 'flex', gap: 1 }}>
-                      <EditIcon 
+                      {/* <EditIcon 
                         sx={{ cursor: 'pointer', color: '#2196f3' }} 
                         onClick={() => handleOpen(project)}
-                      />
+                      /> */}
                       <DeleteIcon 
                         sx={{ cursor: 'pointer', color: '#f44336' }} 
                         onClick={() => handleDelete(project.s_id)}
