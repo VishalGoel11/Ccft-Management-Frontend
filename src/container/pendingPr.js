@@ -308,7 +308,7 @@ const AllProjectsPage = () => {
                   <TableCell>
                     <a href={`${API_BASE_URL}/pdf/${project.s_report}${'.pdf'}`} target="_blank" rel="noopener noreferrer">
                       {project.s_report}
-                    </a>
+                    </a> 
                   </TableCell>
                   <TableCell>{project.s_raw_data}</TableCell>
                     <TableCell sx={{ textTransform: 'capitalize' }}>{project.t_status!=null?project.t_status:"N/A"}</TableCell>
