@@ -23,7 +23,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { getLocalStorage, handleHttpRequest, handleRefresh } from "../api/utility/Utility";
-import { addSample, deleteSample, getAllClient, getAllSample, getAllTest } from "../api/const/api-url";
+import { addSample, API_BASE_URL, deleteSample, getAllClient, getAllSample, getAllTest } from "../api/const/api-url";
 
 import RefreshIcon from '@mui/icons-material/Refresh';
 
@@ -307,7 +307,7 @@ const AllProjectsPage = () => {
                   <TableCell>{project.s_date_received}</TableCell>
                   <TableCell>{project.s_delivery_date!==null?project.s_delivery_date:"N/A"}</TableCell>
                   <TableCell>
-                    <a href={`/${project.s_report}`} target="_blank" rel="noopener noreferrer">
+                    <a href={`${API_BASE_URL}/pdf/${project.s_report}${'.pdf'}`} target="_blank" rel="noopener noreferrer">
                       {project.s_report}
                     </a>
                   </TableCell>
